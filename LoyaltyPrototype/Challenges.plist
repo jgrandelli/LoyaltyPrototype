@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>key</key>
+		<string>tag_happy</string>
+
+		<key>title</key>
+		<string>Tag Happy</string>
+
+		<key>description</key>
+		<string>Tag UO in 8 Facebook posts</string>
+
+		<key>type</key>
+		<string>facebook</string>
+
+		<key>points</key>
+		<integer>8000</integer>
+
+		<key>completion</key>
+		<string>2/8</string>
+	</dict>
+
+	<dict>
+		<key>key</key>
+		<string>road_show</string>
+
+		<key>title</key>
+		<string>UO Road Show</string>
+
+		<key>description</key>
+		<string>Check in at 6 different UO stores</string>
+
+		<key>type</key>
+		<string>location</string>
+
+		<key>points</key>
+		<integer>10000</integer>
+
+		<key>completion</key>
+		<string>4/6</string>
+	</dict>
+
+	<dict>
+		<key>key</key>
+		<string>tag_happy</string>
+
+		<key>title</key>
+		<string>Tag Happy</string>
+
+		<key>description</key>
+		<string>Tag UO in 8 Facebook posts</string>
+
+		<key>type</key>
+		<string>facebook</string>
+
+		<key>points</key>
+		<integer>8000</integer>
+
+		<key>completion</key>
+		<string>1/2</string>
+	</dict>
+</array>
+</plist>
