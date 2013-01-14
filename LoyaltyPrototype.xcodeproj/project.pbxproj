@@ -440,7 +440,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LoyaltyPrototype/LoyaltyPrototype-Prefix.pch";
 				INFOPLIST_FILE = "LoyaltyPrototype/LoyaltyPrototype-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "25DE8E9D-1611-4B22-8180-20977D0F5A79";
 				WRAPPER_EXTENSION = app;
@@ -454,7 +454,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LoyaltyPrototype/LoyaltyPrototype-Prefix.pch";
 				INFOPLIST_FILE = "LoyaltyPrototype/LoyaltyPrototype-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -17,7 +17,14 @@
 
 @interface ProfileViewController()
 
-@property NavBarItemsViewController *navBarItems;
+@property (nonatomic, strong) NavBarItemsViewController *navBarItems;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *nextLevelLabel;
+@property (nonatomic, strong) UIView *progressBack;
+@property (nonatomic, strong) UIView *progressBar;
+@property (nonatomic, strong) UILabel *progressPercentLabel;
+@property (nonatomic, strong) UILabel *pointsToGoLabel;
+@property (nonatomic, strong) UIScrollView *feedScroller;
 
 @end
 
@@ -26,8 +33,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    //UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
-    //[self.view addSubview:backgroundImage];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]];
     
     if ([self.navigationController.parentViewController respondsToSelector:@selector(revealGesture:)] &&
@@ -42,13 +47,19 @@
                                                                        [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
 	}
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"🔁" style:UIBarButtonItemStylePlain target:self action:@selector(refreshData)];
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                   [UIFont fontWithName:@"Entypo" size:45.0], UITextAttributeFont,
+                                                                   [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+    
+    
     self.navBarItems = [[NavBarItemsViewController alloc] init];
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSString *userPath = @"http://beta.bunchball.net/nitro/json?method=batch.run&methodFeed=%5B%22method=user.login%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%26userID=123%22,%22method=user.getPreferences%26userId=123%22,%22method=user.getPointsBalance%26pointCategory=all%26includeYearlyCredits=false%26criteria=BALANCE%22,%22method=user.getLevel%22,%22method=user.getNextLevel%22,%22method=site.getActionFeed%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%22%5D";
-    NSURL *userURL = [NSURL URLWithString:userPath];
+
+    NSURL *userURL = [NSURL URLWithString:[[UserData sharedInstance] userDataPath]];
     NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
                                                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -62,8 +73,89 @@
     [operation start];
 }
 
+- (void)refreshData {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    NSURL *userURL = [NSURL URLWithString:[[UserData sharedInstance] userDataPath]];
+    NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                                                            JSON = [JSON objectForKey:@"Nitro"];
+                                                                                            UserData *userData = [UserData sharedInstance];
+                                                                                            [userData parseUserData:JSON];
+                                                                                            [self updateNavBarItems];
+                                                                                            [self updateProfile];
+                                                                                        }
+                                                                                        failure:nil];
+    [operation start];
+}
+
 - (void)updateNavBarItems {
     [_navBarItems updateInfo];
+}
+
+- (void)updateProfile {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    UserData *userData = [UserData sharedInstance];
+
+    _nameLabel.frame = CGRectMake(_nameLabel.frame.origin.x, _nameLabel.frame.origin.y, 0.0, 0.0);
+    NSString *nameLabelText = nil;
+    if ( userData.firstName ) nameLabelText = [NSString stringWithFormat:@"AKA: %@ %@\n%@", userData.firstName, userData.lastName, userData.currentLevel];
+    else nameLabelText = userData.currentLevel;
+    _nameLabel.text = nameLabelText;
+    [_nameLabel sizeToFit];
+    
+    _nextLevelLabel.frame = CGRectMake(_nextLevelLabel.frame.origin.x, _nextLevelLabel.frame.origin.y, 0.0, 0.0);
+    _nextLevelLabel.text = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    [_nextLevelLabel sizeToFit];
+
+    CGRect frame = _progressBar.frame;
+    frame.size.width = _progressBack.frame.size.width * userData.percentAchieved;
+    _progressBar.frame = frame;
+    
+    _progressPercentLabel.frame = CGRectMake(_progressPercentLabel.frame.origin.x, _progressPercentLabel.frame.origin.y, 0.0, 0.0);
+    int percValue = userData.percentAchieved * 100;
+    _progressPercentLabel.text = [NSString stringWithFormat:@"%i%%", percValue];
+    [_progressPercentLabel sizeToFit];
+    
+    _pointsToGoLabel.text = [NSString stringWithFormat:@"%@ more to go", userData.formattedPointsToGo];
+    
+    UIView *oldHolder = [_feedScroller viewWithTag:100];
+    [oldHolder removeFromSuperview];
+    
+    UIView *feedHolder = [[UIView alloc] initWithFrame:CGRectZero];
+    CGFloat yPos = 10.0;
+    for ( NSDictionary *feedItem in userData.feedArray ) {
+        NSString *content = [NSString stringWithFormat:@"%@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
+        NSMutableAttributedString *attString=[[NSMutableAttributedString alloc] initWithString:content];
+        
+        NSRange handleRange = [content rangeOfString:[feedItem objectForKey:@"handle"]];
+        UIFont *boldFont = [UIFont boldSystemFontOfSize:12.0];
+        UIColor *boldColor = [UIColor neonGreen];
+        [attString addAttribute:NSFontAttributeName value:boldFont range:handleRange];
+        [attString addAttribute:NSForegroundColorAttributeName value:boldColor range:handleRange];
+        
+        UILabel *feedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPos, _feedScroller.frame.size.width - 20.0, 0.0)];
+        feedLabel.backgroundColor = [UIColor clearColor];
+        feedLabel.textColor = [UIColor offWhite];
+        feedLabel.numberOfLines = 0;
+        feedLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        feedLabel.font = [UIFont systemFontOfSize:12.0];
+        feedLabel.textColor = [UIColor offWhite];
+        feedLabel.attributedText = attString;
+        
+        [feedLabel sizeToFit];
+        [feedHolder addSubview:feedLabel];
+        
+        yPos += 8.0 + feedLabel.frame.size.height;
+    }
+    feedHolder.tag = 100;
+    feedHolder.frame = CGRectMake(0.0, 0.0, _feedScroller.frame.size.width, yPos + 10.0);
+    [_feedScroller addSubview:feedHolder];
+    _feedScroller.contentSize = feedHolder.frame.size;
+    
+    [self.view addSubview:_feedScroller];
+
 }
 
 - (void)setupProfile {
@@ -90,21 +182,21 @@
     handleLabel.frame = frame;
     [self.view addSubview:handleLabel];
     
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x,
+    self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x,
                                                                    handleLabel.frame.origin.y + handleLabel.frame.size.height + 2.0,
                                                                    400.0, 40.0)];
-    nameLabel.backgroundColor = [UIColor clearColor];
-    nameLabel.numberOfLines = 2;
-    nameLabel.textColor = [UIColor neonBlue];
-    nameLabel.font = [UIFont systemFontOfSize:13.0];
+    _nameLabel.backgroundColor = [UIColor clearColor];
+    _nameLabel.numberOfLines = 2;
+    _nameLabel.textColor = [UIColor neonBlue];
+    _nameLabel.font = [UIFont systemFontOfSize:13.0];
     NSString *nameLabelText = nil;
     if ( userData.firstName ) nameLabelText = [NSString stringWithFormat:@"AKA: %@ %@\n%@", userData.firstName, userData.lastName, userData.currentLevel];
     else nameLabelText = userData.currentLevel;
-    nameLabel.text = nameLabelText;
-    [nameLabel sizeToFit];
-    [self.view addSubview:nameLabel];
+    _nameLabel.text = nameLabelText;
+    [_nameLabel sizeToFit];
+    [self.view addSubview:_nameLabel];
     
-    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x,
+    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(_nameLabel.frame.origin.x,
                                                                    profileImgView.frame.origin.y + profileImgView.frame.size.height,
                                                                    200.0, 40.0)];
     dateLabel.backgroundColor = [UIColor clearColor];
@@ -117,54 +209,54 @@
     dateLabel.frame = frame;
     [self.view addSubview:dateLabel];
     
-    UILabel *nextLevelLabel = [[UILabel alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
+    self.nextLevelLabel = [[UILabel alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
                                                                         profileImgView.frame.origin.y + profileImgView.frame.size.height + 25.0,
                                                                         self.view.bounds.size.width - 30.0, 40.0)];
-    nextLevelLabel.backgroundColor = [UIColor clearColor];
-    nextLevelLabel.font = [UIFont systemFontOfSize:13.0];
-    nextLevelLabel.textColor = [UIColor offWhite];
-    nextLevelLabel.text = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
-    [nextLevelLabel sizeToFit];
-    [self.view addSubview:nextLevelLabel];
+    _nextLevelLabel.backgroundColor = [UIColor clearColor];
+    _nextLevelLabel.font = [UIFont systemFontOfSize:13.0];
+    _nextLevelLabel.textColor = [UIColor offWhite];
+    _nextLevelLabel.text = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    [_nextLevelLabel sizeToFit];
+    [self.view addSubview:_nextLevelLabel];
     
-    UIView *progressBack = [[UIView alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
-                                                                    nextLevelLabel.frame.origin.y + nextLevelLabel.frame.size.height + 2.0,
+    self.progressBack = [[UIView alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
+                                                                    _nextLevelLabel.frame.origin.y + _nextLevelLabel.frame.size.height + 2.0,
                                                                     self.view.bounds.size.width - 30.0, 7.0)];
-    progressBack.backgroundColor = [UIColor offWhite];
-    [self.view addSubview:progressBack];
+    _progressBack.backgroundColor = [UIColor offWhite];
+    [self.view addSubview:_progressBack];
     
-    CGFloat progressWidth = progressBack.frame.size.width * userData.percentAchieved;
+    CGFloat progressWidth = _progressBack.frame.size.width * userData.percentAchieved;
     
-    UIView *progressBar = [[UIView alloc] initWithFrame:CGRectMake(progressBack.frame.origin.x,
-                                                                   progressBack.frame.origin.y,
-                                                                   progressWidth, progressBack.frame.size.height)];
-    progressBar.backgroundColor = [UIColor neonGreen];
-    [self.view addSubview:progressBar];
+    self.progressBar = [[UIView alloc] initWithFrame:CGRectMake(_progressBack.frame.origin.x,
+                                                                   _progressBack.frame.origin.y,
+                                                                   progressWidth, _progressBack.frame.size.height)];
+    _progressBar.backgroundColor = [UIColor neonGreen];
+    [self.view addSubview:_progressBar];
     
-    UILabel *progressPercentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nextLevelLabel.frame.origin.x,
-                                                                              progressBack.frame.origin.y + progressBack.frame.size.height + 2.0,
+    self.progressPercentLabel = [[UILabel alloc] initWithFrame:CGRectMake(_nextLevelLabel.frame.origin.x,
+                                                                              _progressBack.frame.origin.y + _progressBack.frame.size.height + 2.0,
                                                                           100.0, 40.0)];
-    progressPercentLabel.backgroundColor = [UIColor clearColor];
-    progressPercentLabel.textColor = [UIColor offWhite];
-    progressPercentLabel.font = [UIFont systemFontOfSize:12.0];
+    _progressPercentLabel.backgroundColor = [UIColor clearColor];
+    _progressPercentLabel.textColor = [UIColor offWhite];
+    _progressPercentLabel.font = [UIFont systemFontOfSize:12.0];
     int percValue = userData.percentAchieved * 100;
-    progressPercentLabel.text = [NSString stringWithFormat:@"%i%%", percValue];
-    [progressPercentLabel sizeToFit];
-    [self.view addSubview:progressPercentLabel];
+    _progressPercentLabel.text = [NSString stringWithFormat:@"%i%%", percValue];
+    [_progressPercentLabel sizeToFit];
+    [self.view addSubview:_progressPercentLabel];
     
-    UILabel *pointsToGoLabel = [[UILabel alloc] initWithFrame:CGRectMake(nextLevelLabel.frame.origin.x,
-                                                                         progressPercentLabel.frame.origin.y,
-                                                                         self.view.bounds.size.width - 30.0, progressPercentLabel.frame.size.height)];
-    pointsToGoLabel.backgroundColor = [UIColor clearColor];
-    pointsToGoLabel.textAlignment = NSTextAlignmentRight;
-    pointsToGoLabel.textColor = [UIColor offWhite];
-    pointsToGoLabel.font = progressPercentLabel.font;
-    pointsToGoLabel.text = [NSString stringWithFormat:@"%@ more to go", userData.formattedPointsToGo];
-    [self.view addSubview:pointsToGoLabel];
+    self.pointsToGoLabel = [[UILabel alloc] initWithFrame:CGRectMake(_nextLevelLabel.frame.origin.x,
+                                                                         _progressPercentLabel.frame.origin.y,
+                                                                         self.view.bounds.size.width - 30.0, _progressPercentLabel.frame.size.height)];
+    _pointsToGoLabel.backgroundColor = [UIColor clearColor];
+    _pointsToGoLabel.textAlignment = NSTextAlignmentRight;
+    _pointsToGoLabel.textColor = [UIColor offWhite];
+    _pointsToGoLabel.font = _progressPercentLabel.font;
+    _pointsToGoLabel.text = [NSString stringWithFormat:@"%@ more to go", userData.formattedPointsToGo];
+    [self.view addSubview:_pointsToGoLabel];
     
     UIView *greenLine = [[UIView alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
-                                                                 pointsToGoLabel.frame.origin.y + pointsToGoLabel.frame.size.height + 30.0,
-                                                                 progressBack.frame.size.width, 1.0)];
+                                                                 _pointsToGoLabel.frame.origin.y + _pointsToGoLabel.frame.size.height + 30.0,
+                                                                 _progressBack.frame.size.width, 1.0)];
     greenLine.backgroundColor = [UIColor neonGreen];
     greenLine.alpha = 0.3;
     [self.view addSubview:greenLine];
@@ -191,8 +283,8 @@
     [self.view addSubview:mailLabel];
     
     greenLine = [[UIView alloc] initWithFrame:CGRectMake(profileImgView.frame.origin.x,
-                                                                 pointsToGoLabel.frame.origin.y + pointsToGoLabel.frame.size.height + 65.0,
-                                                                 progressBack.frame.size.width, 1.0)];
+                                                                 _pointsToGoLabel.frame.origin.y + _pointsToGoLabel.frame.size.height + 65.0,
+                                                                 _progressBack.frame.size.width, 1.0)];
     greenLine.backgroundColor = [UIColor neonGreen];
     greenLine.alpha = 0.3;
     [self.view addSubview:greenLine];
@@ -214,6 +306,44 @@
     greenLine.backgroundColor = [UIColor neonGreen];
     greenLine.alpha = 0.3;
     [self.view addSubview:greenLine];
+    
+    self.feedScroller = [[UIScrollView alloc] initWithFrame:CGRectMake(greenLine.frame.origin.x,
+                                                                       greenLine.frame.origin.y + 1,
+                                                                       greenLine.frame.size.width,
+                                                                       self.view.frame.size.height - greenLine.frame.origin.y - 1)];
+    UIView *feedHolder = [[UIView alloc] initWithFrame:CGRectZero];
+    CGFloat yPos = 10.0;
+    for ( NSDictionary *feedItem in userData.feedArray ) {
+        NSString *content = [NSString stringWithFormat:@"%@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
+        NSMutableAttributedString *attString=[[NSMutableAttributedString alloc] initWithString:content];
+
+        NSRange handleRange = [content rangeOfString:[feedItem objectForKey:@"handle"]];
+        UIFont *boldFont = [UIFont boldSystemFontOfSize:12.0];
+        UIColor *boldColor = [UIColor neonGreen];
+        [attString addAttribute:NSFontAttributeName value:boldFont range:handleRange];
+        [attString addAttribute:NSForegroundColorAttributeName value:boldColor range:handleRange];
+        
+        UILabel *feedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPos, greenLine.frame.size.width - 20.0, 0.0)];
+        feedLabel.backgroundColor = [UIColor clearColor];
+        feedLabel.textColor = [UIColor offWhite];
+        feedLabel.numberOfLines = 0;
+        feedLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        feedLabel.font = [UIFont systemFontOfSize:12.0];
+        feedLabel.textColor = [UIColor offWhite];
+        feedLabel.attributedText = attString;
+        
+        [feedLabel sizeToFit];
+        [feedHolder addSubview:feedLabel];
+        
+        yPos += 8.0 + feedLabel.frame.size.height;
+    }
+    
+    feedHolder.frame = CGRectMake(0.0, 0.0, greenLine.frame.size.width, yPos + 10.0);
+    feedHolder.tag = 100;
+    [_feedScroller addSubview:feedHolder];
+    _feedScroller.contentSize = feedHolder.frame.size;
+    
+    [self.view addSubview:_feedScroller];
 }
 
 - (void)didReceiveMemoryWarning {

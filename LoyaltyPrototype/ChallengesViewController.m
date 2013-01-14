@@ -12,6 +12,7 @@
 #import <AFNetworking.h>
 #import "ChallengeDetailViewController.h"
 #import "NavBarItemsViewController.h"
+#import "UserData.h"
 
 @interface ChallengesViewController ()
 
@@ -31,7 +32,6 @@
 #define LEFT_MARGIN 45.0f
 #define RIGHT_MARGIN 10.0f
 #define VERT_MARGIN 9.0f
-#define SESSION_KEY @"NHwxMDQwNjJ8MTUzOTc3NjQwNDB8MTM1ODM0OTQ4NXxhOGEzYTI1NWI5ZWM0M2U0NTZlNmNhZWFmNTU2MTU2NmM1ZjRiMWNifDA="
 
 - (id)init {
 	self = [super init];
@@ -66,6 +66,12 @@
                                                                        [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
 	}
 
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"🔁" style:UIBarButtonItemStylePlain target:self action:@selector(refreshData)];
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                    [UIFont fontWithName:@"Entypo" size:45.0], UITextAttributeFont,
+                                                                    [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+    
+    
     self.navBarItems = [[NavBarItemsViewController alloc] init];
     _navBarItems.view.frame = self.navigationController.navigationBar.bounds;
     [self.navigationController.navigationBar addSubview:_navBarItems.view];
@@ -102,14 +108,32 @@
     _tableView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_tableView];
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self getChallengeData];
+}
 
-    NSString *baseURL = @"https://beta.bunchball.net/nitro/json?method=user.getChallengeProgress&showonlytrophies=false&folder=UO%20Challenges&showCanAchieveChallenge=true&sessionKey=";
-    NSString *path = [NSString stringWithFormat:@"%@%@", baseURL, SESSION_KEY];
+- (void)refreshData {
+    [self getChallengeData];
+    NSURL *userURL = [NSURL URLWithString:[[UserData sharedInstance] userDataPath]];
+    NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                                                            JSON = [JSON objectForKey:@"Nitro"];
+                                                                                            UserData *userData = [UserData sharedInstance];
+                                                                                            [userData parseUserData:JSON];
+                                                                                            [_navBarItems updateInfo];
+                                                                                        }
+                                                                                        failure:nil];
+    [operation start];
+
+}
+
+- (void)getChallengeData {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSString *baseURL = @"https://sandbox.bunchball.net/nitro/json?method=user.getChallengeProgress&showonlytrophies=false&showCanAchieveChallenge=true&sessionKey=";
+    NSString *path = [NSString stringWithFormat:@"%@%@", baseURL, [[UserData sharedInstance] sessionKey]];
     NSURL *url = [NSURL URLWithString:path];
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
-    
-    //https://beta.bunchball.net/nitro/json?method=user.getChallengeProgress&showonlytrophies=false&folder=UO%20Challenges&showCanAchieveChallenge=true&sessionKey=NHwxMDQwNjJ8MTUzOTc3NjQwNDB8MTM1ODM0OTQ4NXxhOGEzYTI1NWI5ZWM0M2U0NTZlNmNhZWFmNTU2MTU2NmM1ZjRiMWNifDA=
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req
                                                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -118,7 +142,9 @@
                                                                                             JSON = [JSON objectForKey:@"Challenge"];
                                                                                             [self finishedLoadingWithData:JSON];
                                                                                         }
-                                                                                        failure:nil];
+                                                                                        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                            NSLog(@"%@", error);
+                                                                                        }];
     [operation start];
 }
 

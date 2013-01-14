@@ -29,8 +29,8 @@
 @property (nonatomic) int pointsToGo;
 @property (nonatomic, strong) NSString *formattedPointsToGo;
 @property (nonatomic) CGFloat percentAchieved;
-
-
+@property (nonatomic, strong) NSArray *feedArray;
+@property (nonatomic, strong) NSString *userDataPath;
 
 + (id)sharedInstance;
 - (void)parseUserData:(NSDictionary *)data;

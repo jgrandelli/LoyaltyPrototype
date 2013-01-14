@@ -41,11 +41,12 @@
     for ( int i = 0; i < [customDataArray count]; ++i ) {
         NSString *pair = [customDataArray objectAtIndex:i];
         NSUInteger colonInt = [pair rangeOfString:@":"].location;
-        
-        NSString *key = [pair substringToIndex:colonInt];
-        NSString *value = [pair substringFromIndex:colonInt + 1];
-        
-        [customDataDictionary setObject:value forKey:key];
+        if ( colonInt != NSNotFound ) {
+            NSString *key = [pair substringToIndex:colonInt];
+            NSString *value = [pair substringFromIndex:colonInt + 1];
+            
+            [customDataDictionary setObject:value forKey:key];
+        }
     }
     
     NSArray *entypo = @[@"profile", @"checkin", @"review"];
@@ -95,7 +96,8 @@
         CGFloat percentComplete = achieved / goal;
         if ( percentComplete > 1.0 ) percentComplete = 1.0;
         
-        NSString *description = [rulesCollection objectForKey:@"description"];
+        NSString *description = @"";
+        if ( [rulesCollection objectForKey:@"description"] ) description = [rulesCollection objectForKey:@"description"];
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setObject:[NSNumber numberWithFloat:goal] forKey:@"goal"];

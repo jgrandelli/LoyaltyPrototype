@@ -12,6 +12,7 @@
 #import <AFNetworking.h>
 #import <UIImageView+AFNetworking.h>
 #import "NavBarItemsViewController.h"
+#import "UserData.h"
 
 @interface LeaderboardViewController ()
 
@@ -37,9 +38,8 @@
 
 @implementation LeaderboardViewController
 
-#define BASE_URL @"https://beta.bunchball.net/nitro/json?"
-#define SESSION_KEY @"&sessionKey=NHwxMDQwNjJ8MTUzOTc3NjQwNDB8MTM1ODM0OTQ4NXxhOGEzYTI1NWI5ZWM0M2U0NTZlNmNhZWFmNTU2MTU2NmM1ZjRiMWNifDA="
-#define USER_URL @"start=1356712240&withRank=true&duration=ALLTIME&criteria=CREDITS&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile_name%7Cprofile_url%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds=123"
+#define BASE_URL @"https://sandbox.bunchball.net/nitro/json?"
+#define USER_URL @"start=1356712240&withRank=true&duration=ALLTIME&criteria=CREDITS&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile_name%7Cprofile_url%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds=16"
 #define FRIENDS_URL @"method=user.getFriends&friendType=current&returnCount=100"
 #define OVERALL_LEADERS_URL @"start=1356712240&withRank=false&duration=ALLTIME&criteria=BALANCE&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile%5Fname%7Cprofile%5Furl%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds="
 #define AVAILABLE_BOARDS_URL @"method=user.getChallengeProgress&showonlytrophies=false&showCanAchieveChallenge=true"
@@ -75,6 +75,11 @@
                                                                        [UIFont fontWithName:@"Entypo" size:50.0], UITextAttributeFont,
                                                                        [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
 	}
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"🔁" style:UIBarButtonItemStylePlain target:self action:@selector(refreshData)];
+    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                    [UIFont fontWithName:@"Entypo" size:45.0], UITextAttributeFont,
+                                                                    [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
 
     self.navBarItems = [[NavBarItemsViewController alloc] init];
     _navBarItems.view.frame = self.navigationController.navigationBar.bounds;
@@ -151,7 +156,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    NSString *userPath = [NSString stringWithFormat:@"%@%@%@", BASE_URL, USER_URL, SESSION_KEY];
+    NSString *userPath = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, USER_URL, [[UserData sharedInstance] sessionKey]];
     NSURL *userURL = [NSURL URLWithString:userPath];
     NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
     AFJSONRequestOperation *userOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
@@ -163,7 +168,7 @@
                                                                                         }
                                                                                         failure:nil];
 
-    NSString *friendsPath = [NSString stringWithFormat:@"%@%@%@", BASE_URL, FRIENDS_URL, SESSION_KEY];
+    NSString *friendsPath = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, FRIENDS_URL, [[UserData sharedInstance] sessionKey]];
     NSURL *friendsURL = [NSURL URLWithString:friendsPath];
     NSURLRequest *friendsReq = [NSURLRequest requestWithURL:friendsURL];
     AFJSONRequestOperation *friendsOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:friendsReq
@@ -175,7 +180,7 @@
                                                                                      failure:nil];
     
     
-    NSString *leaderBoardPath = [NSString stringWithFormat:@"%@%@%@", BASE_URL, OVERALL_LEADERS_URL, SESSION_KEY];
+    NSString *leaderBoardPath = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, OVERALL_LEADERS_URL, [[UserData sharedInstance] sessionKey]];
     NSURL *leaderBoardURL = [NSURL URLWithString:leaderBoardPath];
     NSURLRequest *leaderBoardReq = [NSURLRequest requestWithURL:leaderBoardURL];
     AFJSONRequestOperation *leaderBoardOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:leaderBoardReq
@@ -186,7 +191,7 @@
                                                                                      }
                                                                                      failure:nil];
     
-    NSString *availableBoardsPath = [NSString stringWithFormat:@"%@%@%@", BASE_URL, AVAILABLE_BOARDS_URL, SESSION_KEY];
+    NSString *availableBoardsPath = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, AVAILABLE_BOARDS_URL, [[UserData sharedInstance] sessionKey]];
     NSURL *availableBoardsURL = [NSURL URLWithString:availableBoardsPath];
     NSURLRequest *availableBoardsReq = [NSURLRequest requestWithURL:availableBoardsURL];
     AFJSONRequestOperation *availableBoardsOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:availableBoardsReq
@@ -216,13 +221,29 @@
 
 
 #pragma mark - Data Processing methods
+- (void)refreshData {
+    NSURL *userURL = [NSURL URLWithString:[[UserData sharedInstance] userDataPath]];
+    NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                                                            JSON = [JSON objectForKey:@"Nitro"];
+                                                                                            UserData *userData = [UserData sharedInstance];
+                                                                                            [userData parseUserData:JSON];
+                                                                                            [_navBarItems updateInfo];
+                                                                                        }
+                                                                                        failure:nil];
+    [operation start];
+    
+    [self getLeaderBoardData];
+}
+
 - (void)getLeaderBoardData {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     NSString *leaderBoardPath = nil;
 
     if ( _currentLeaderBoard == 0 ) {
-        leaderBoardPath = [NSString stringWithFormat:@"%@%@%@", BASE_URL, OVERALL_LEADERS_URL, SESSION_KEY];
+        leaderBoardPath = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, OVERALL_LEADERS_URL, [[UserData sharedInstance] sessionKey]];
     }
     else {
         NSDictionary *dict = [_availableLeaderBoards objectAtIndex:_currentLeaderBoard];
@@ -231,7 +252,7 @@
         NSString *operator = [dict objectForKey:@"operator"];
         NSString *duration = [[dict objectForKey:@"duration"] uppercaseString];
         NSString *parameters = [NSString stringWithFormat:@"&criteria=%@&tags=%@&duration=%@&tagsOperator=%@", criteria, tag, duration, operator];
-        leaderBoardPath = [NSString stringWithFormat:@"%@%@%@%@", BASE_URL, CHALLENGE_URL, SESSION_KEY, parameters];
+        leaderBoardPath = [NSString stringWithFormat:@"%@%@%@&sessionKey=%@", BASE_URL, CHALLENGE_URL, parameters, [[UserData sharedInstance] sessionKey]];
     }
 
     NSURL *leaderBoardURL = [NSURL URLWithString:leaderBoardPath];
@@ -388,7 +409,6 @@
 }
 
 - (void)parseOverallLeaderBoard:(NSDictionary *)JSON {
-    //*
     [_leaderList removeAllObjects];
     
     for ( NSDictionary *dict in [JSON objectForKey:@"Leader"] ) {
