@@ -34,36 +34,52 @@
     
     CGRect frame;
     
-    self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 4.0, self.view.bounds.size.width, 0.0)];
-    _nameLabel.textColor = [UIColor blackColor];
-    _nameLabel.backgroundColor = [UIColor whiteColor];
-    _nameLabel.textAlignment = NSTextAlignmentCenter;
-    //_nameLabel.font = [UIFont boldSystemFontOfSize:16.0];
-    _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:16];
-    frame = _nameLabel.frame;
-    _nameLabel.text = @"";
-    [_nameLabel sizeToFit];
-    [self.view addSubview:_nameLabel];
+    if ( ![_pageType isEqualToString:@"shopping"] ) {
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 4.0, self.view.bounds.size.width, 0.0)];
+        _nameLabel.textColor = [UIColor blackColor];
+        _nameLabel.backgroundColor = [UIColor whiteColor];
+        _nameLabel.textAlignment = NSTextAlignmentCenter;
+        _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:16];
+        frame = _nameLabel.frame;
+        _nameLabel.text = @"";
+        [_nameLabel sizeToFit];
+        [self.view addSubview:_nameLabel];
+        
+        self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.origin.y + frame.size.height, self.view.bounds.size.width, 0.0)];
+        _statusLabel.textColor = [UIColor blackColor];
+        _statusLabel.backgroundColor = [UIColor whiteColor];
+        _statusLabel.textAlignment = NSTextAlignmentCenter;
+        _statusLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:12.0];
+        frame = _statusLabel.frame;
+        _statusLabel.text = @"";
+        [_statusLabel sizeToFit];
+        [self.view addSubview:_statusLabel];
+        
+        //*
+        self.progressBack = [[UIView alloc] initWithFrame:CGRectMake(0.0, 40.0, self.view.frame.size.width, 4.0)];
+        _progressBack.backgroundColor = [UIColor blackColor];
+        [self.view addSubview:_progressBack];
+        
+        self.progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, _progressBack.frame.origin.y, 0.0, 4.0)];
+        _progressBar.backgroundColor = [UIColor redColor];
+        [self.view addSubview:_progressBar];
+    }
+    else {
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 7.0, self.view.bounds.size.width, 0.0)];
+        _nameLabel.textColor = [UIColor blackColor];
+        _nameLabel.backgroundColor = [UIColor whiteColor];
+        _nameLabel.textAlignment = NSTextAlignmentCenter;
+        _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:20];
+        _nameLabel.text = @"Urban Outfitters";
+        [_nameLabel sizeToFit];
+        frame = _nameLabel.frame;
+        frame.size.width = _nameLabel.frame.size.width + 10.0;
+        frame.size.height = _nameLabel.frame.size.height + 4.0;
+        frame.origin.x = roundf(self.view.frame.size.width*.5 - frame.size.width*.5);
+        _nameLabel.frame = frame;
+        [self.view addSubview:_nameLabel];
+    }
     
-    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.origin.y + frame.size.height, self.view.bounds.size.width, 0.0)];
-    _statusLabel.textColor = [UIColor blackColor];
-    _statusLabel.backgroundColor = [UIColor whiteColor];
-    _statusLabel.textAlignment = NSTextAlignmentCenter;
-    _statusLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:12.0];
-    frame = _statusLabel.frame;
-    _statusLabel.text = @"";
-    [_statusLabel sizeToFit];
-    [self.view addSubview:_statusLabel];
-    
-    //*
-    self.progressBack = [[UIView alloc] initWithFrame:CGRectMake(0.0, 40.0, self.view.frame.size.width, 4.0)];
-    _progressBack.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:_progressBack];
-    
-    self.progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, _progressBack.frame.origin.y, 0.0, 4.0)];
-    _progressBar.backgroundColor = [UIColor redColor];
-    [self.view addSubview:_progressBar];
-     //*/
 }
 
 - (void)updateInfo {
