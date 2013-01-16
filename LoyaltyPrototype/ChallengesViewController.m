@@ -13,6 +13,8 @@
 #import "ChallengeDetailViewController.h"
 #import "NavBarItemsViewController.h"
 #import "UserData.h"
+#import "BackgroundView.h"
+#import "UIFont+UrbanAdditions.h"
 
 @interface ChallengesViewController ()
 
@@ -23,15 +25,17 @@
 @property (nonatomic, strong) NSMutableArray *availableChallenges;
 @property (nonatomic, weak) NSMutableArray *selectedArray;
 @property (nonatomic, strong) NavBarItemsViewController *navBarItems;
+@property (nonatomic) int currentSelection;
+
 @end
 
 @implementation ChallengesViewController
 
 #define TITLE_FONT_SIZE 16.0f
 #define DESC_FONT_SIZE 12.0f
-#define LEFT_MARGIN 45.0f
-#define RIGHT_MARGIN 10.0f
-#define VERT_MARGIN 9.0f
+#define LEFT_MARGIN 48.0f
+#define RIGHT_MARGIN 18.0f
+#define VERT_MARGIN 10.0f
 
 - (id)init {
 	self = [super init];
@@ -52,64 +56,107 @@
     
     self.selectedArray = _currentChallenges;
 
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background1"]];
+
+    self.navBarItems = [[NavBarItemsViewController alloc] init];
+    [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
+    [_navBarItems updateInfo];
+    [self.navigationController.navigationBar addSubview:_navBarItems.view];
     
     if ([self.navigationController.parentViewController respondsToSelector:@selector(revealGesture:)] &&
         [self.navigationController.parentViewController respondsToSelector:@selector(revealToggle:)])
     {
         UIPanGestureRecognizer *navigationBarPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.navigationController.parentViewController action:@selector(revealGesture:)];
 		[self.navigationController.navigationBar addGestureRecognizer:navigationBarPanGestureRecognizer];
-		
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"\u2630" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
-        [self.navigationItem.leftBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                       [UIFont fontWithName:@"Entypo" size:50.0], UITextAttributeFont,
-                                                                       [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
 	}
+    
+    BackgroundView *backView = [[BackgroundView alloc] initWithFrame:CGRectMake(15.0, self.navigationController.navigationBar.frame.size.height + 15.0, self.view.bounds.size.width - 30.0, 44.0)];
+    [self.view addSubview:backView];
+    
+    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn1.frame = CGRectMake(backView.frame.origin.x + 3.0, backView.frame.origin.y + 3.0, 93.0, 34.0);
+    [btn1 setImage:[UIImage imageNamed:@"currentBtn"] forState:UIControlStateNormal];
+    [btn1 setImage:[UIImage imageNamed:@"currentBtn-selected"] forState:UIControlStateSelected];
+    btn1.tag = 100;
+    [btn1 addTarget:self action:@selector(segmentedBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn1];
+    [self performSelector:@selector(segmentedBtnPressed:) withObject:[self.view viewWithTag:100]];
+    
+    
+    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn2.frame = CGRectMake(btn1.frame.origin.x + btn1.frame.size.width, btn1.frame.origin.y, 93.0, 34);
+    [btn2 setImage:[UIImage imageNamed:@"availableBtn"] forState:UIControlStateNormal];
+    [btn2 setImage:[UIImage imageNamed:@"availableBtn-selected"] forState:UIControlStateSelected];
+    btn2.tag = 101;
+    [btn2 addTarget:self action:@selector(segmentedBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn2];
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"🔁" style:UIBarButtonItemStylePlain target:self action:@selector(refreshData)];
-    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [UIFont fontWithName:@"Entypo" size:45.0], UITextAttributeFont,
-                                                                    [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+    UIButton *btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn3.frame = CGRectMake(btn2.frame.origin.x + btn2.frame.size.width, btn1.frame.origin.y, 93.0, 34);
+    [btn3 setImage:[UIImage imageNamed:@"completedBtn"] forState:UIControlStateNormal];
+    [btn3 setImage:[UIImage imageNamed:@"completedBtn-selected"] forState:UIControlStateSelected];
+    btn3.tag = 102;
+    [btn3 addTarget:self action:@selector(segmentedBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn3];
     
-    
-    self.navBarItems = [[NavBarItemsViewController alloc] init];
-    _navBarItems.view.frame = self.navigationController.navigationBar.bounds;
-    [self.navigationController.navigationBar addSubview:_navBarItems.view];
-    [_navBarItems updateInfo];
-    
-    self.segmentedController = [[UISegmentedControl alloc] initWithItems:@[@"Current", @"Available", @"Completed"]];
-    _segmentedController.frame = CGRectMake( 15.0, self.navigationController.navigationBar.frame.size.height + 15.0, self.view.bounds.size.width - 30.0, 34.0);
-    _segmentedController.segmentedControlStyle = UISegmentedControlStyleBar;
-    _segmentedController.tintColor = [UIColor blackColor];
-    [_segmentedController setBackgroundColor:[UIColor clearColor]];
-    [_segmentedController setTitleTextAttributes:@{ UITextAttributeTextColor:[UIColor neonGreen] } forState:UIControlStateNormal];
-    [_segmentedController setTitleTextAttributes:@{ UITextAttributeTextColor:[UIColor blackColor] } forState:UIControlStateSelected];
-    [self.view addSubview:_segmentedController];
-    
-    [_segmentedController addTarget:self action:@selector(segmentedControlChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    [_segmentedController setSelectedSegmentIndex:0];
-    [self performSelector:@selector(segmentedControlChanged:) withObject:_segmentedController afterDelay:0.0];
+    UIView *blackBar = [[UIView alloc] initWithFrame:CGRectMake(btn2.frame.origin.x - 1, btn2.frame.origin.y - 1.0, 2.0, btn2.frame.size.height + 2.0)];
+    blackBar.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:blackBar];
 
-    UIView *greenLine = [[UIView alloc] initWithFrame:CGRectMake(15.0,
-                                                                 _segmentedController.frame.origin.y + _segmentedController.frame.size.height + 15.0,
-                                                                 self.view.frame.size.width - 30.0, 1.0)];
-    greenLine.backgroundColor = [UIColor neonGreen];
-    greenLine.alpha = 0.3;
-    [self.view addSubview:greenLine];
+    blackBar = [[UIView alloc] initWithFrame:CGRectMake(btn3.frame.origin.x - 1, btn3.frame.origin.y - 1.0, 2.0, btn3.frame.size.height + 2.0)];
+    blackBar.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:blackBar];
+    
+    
+    UIView *blackDivider = [[UIView alloc] initWithFrame:CGRectMake(15.0,
+                                                                    backView.frame.origin.y + backView.frame.size.height + 10.0,
+                                                                    self.view.frame.size.width - 30.0, 3.0)];
+    blackDivider.backgroundColor = [UIColor blackColor];
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(15.0,
-                                                                   greenLine.frame.origin.y + 1.0,
+                                                                   blackDivider.frame.origin.y + 1.0,
                                                                    self.view.frame.size.width - 30.0,
-                                                                   self.view.frame.size.height - greenLine.frame.origin.y - 1.0)];
+                                                                   self.view.frame.size.height - blackDivider.frame.origin.y - 1.0)];
     _tableView.dataSource = self;
     _tableView.delegate = self;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_tableView];
 
+    [self.view addSubview:blackDivider];
+
     [self getChallengeData];
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    UIImage *leftImg = [UIImage imageNamed:@"menuBtn"];
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(10.0, 5.0, leftImg.size.width, leftImg.size.height);
+    [leftButton setImage:leftImg forState:UIControlStateNormal];
+    [leftButton addTarget:self.navigationController.parentViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
+    leftButton.tag = 1;
+    [self.navigationController.navigationBar addSubview:leftButton];
+    
+    UIImage *rightImg = [UIImage imageNamed:@"refreshBtn"];
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(self.view.frame.size.width - rightImg.size.width - 10.0, 5.0, rightImg.size.width, rightImg.size.height);
+    [rightBtn setImage:rightImg forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
+    rightBtn.tag = 2;
+    [self.navigationController.navigationBar addSubview:rightBtn];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    UIButton *btn = (UIButton *)[self.navigationController.navigationBar viewWithTag:1];
+    [btn removeFromSuperview];
+    
+    btn = (UIButton *)[self.navigationController.navigationBar viewWithTag:2];
+    [btn removeFromSuperview];
+}
+
 
 - (void)refreshData {
     [self getChallengeData];
@@ -176,16 +223,15 @@
     NSString *title = [NSString stringWithFormat:@"%@: %@ points", challenge.title, challenge.pointsString];
     NSString *desc = challenge.description;
     int perc = challenge.completion * 100;
-    NSString *complete = [NSString stringWithFormat:@"%i%% completed", perc];
+    NSString *complete = [NSString stringWithFormat:@" (%i%% completed)", perc];
+    if ( _currentSelection == 0 ) title = [title stringByAppendingString:complete];
     
     CGSize constraint = CGSizeMake(_tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 2000.0);
-    CGSize titleSize = [title sizeWithFont:[UIFont systemFontOfSize:TITLE_FONT_SIZE] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
-    CGSize completeSize = [complete sizeWithFont:[UIFont systemFontOfSize:TITLE_FONT_SIZE] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
-    CGSize descSize = [desc sizeWithFont:[UIFont systemFontOfSize:DESC_FONT_SIZE] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize titleSize = [title sizeWithFont:[UIFont fontNamedLoRes12BoldOaklandWithSize:15.0] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize descSize = [desc sizeWithFont:[UIFont fontNamedLoRes15BoldOaklandWithSize:14.0] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
     
     CGFloat height;
-    if ( _segmentedController.selectedSegmentIndex != 0 ) height = titleSize.height + descSize.height + (VERT_MARGIN * 2);
-    else height = titleSize.height + completeSize.height + descSize.height + (VERT_MARGIN * 2);
+    height = titleSize.height + descSize.height + 2.0 + (VERT_MARGIN * 2) + 20.0;
     
     return MAX(height, 54.0);
 }
@@ -194,47 +240,39 @@
     static NSString *cellIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
+    BackgroundView *backView = nil;
     UILabel *titleLabel = nil;
-    UILabel *percentLable = nil;
     UILabel *descriptionLabel = nil;
-    UILabel *iconLabel = nil;
+    UIImageView *icon = nil;
     
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         
         UIView *selView = [[UIView alloc] initWithFrame:cell.frame];
-        selView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
+        selView.backgroundColor = [UIColor clearColor];
         cell.selectedBackgroundView = selView;
-        cell.backgroundColor = [UIColor blueColor];
         
-        iconLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, -6.0, 40.0, 100.0)];
-        iconLabel.textColor = [UIColor neonGreen];
-        iconLabel.backgroundColor = [UIColor clearColor];
-        iconLabel.tag = 1;
-        [cell addSubview:iconLabel];
+        backView = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 10.0, self.view.bounds.size.width - 30.0, 0.0)];
+        backView.tag = 1;
+        [[cell contentView]  addSubview:backView];
         
-        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_MARGIN, VERT_MARGIN, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0)];
+        icon = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, backView.frame.origin.y + VERT_MARGIN, 28.0, 28.0)];
+        icon.tag = 2;
+        [[cell contentView] addSubview:icon];
+        
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_MARGIN, icon.frame.origin.y, backView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 0.0)];
         titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.textColor = [UIColor offWhite];
-        titleLabel.font = [UIFont systemFontOfSize:16.0];
+        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:15.0];
         titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         titleLabel.numberOfLines = 0;
-        titleLabel.tag = 2;
+        titleLabel.tag = 3;
         [[cell contentView] addSubview:titleLabel];
-        
-        percentLable = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_MARGIN, VERT_MARGIN, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0)];
-        percentLable.backgroundColor = [UIColor clearColor];
-        percentLable.textColor = [UIColor neonBlue];
-        percentLable.font = [UIFont systemFontOfSize:16.0];
-        percentLable.lineBreakMode = NSLineBreakByWordWrapping;
-        percentLable.numberOfLines = 0;
-        percentLable.tag = 3;
-        [[cell contentView] addSubview:percentLable];
-        
-        descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_MARGIN, VERT_MARGIN, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0)];
+
+        descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.frame.origin.x, icon.frame.origin.y, backView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 0.0)];
         descriptionLabel.backgroundColor = [UIColor clearColor];
-        descriptionLabel.textColor = [UIColor offWhite];
-        descriptionLabel.font = [UIFont systemFontOfSize:12.0];
+        descriptionLabel.textColor = [UIColor blackColor];
+        descriptionLabel.font = [UIFont fontNamedLoRes15BoldOaklandWithSize:14.0];
         descriptionLabel.lineBreakMode = NSLineBreakByWordWrapping;
         descriptionLabel.numberOfLines = 0;
         descriptionLabel.tag = 4;
@@ -243,36 +281,46 @@
     
     ChallengeData *challenge = [_selectedArray objectAtIndex:[indexPath row]];
     
-    if ( !iconLabel ) iconLabel = (UILabel *)[cell viewWithTag:1];
-    iconLabel.font = [UIFont fontWithName:challenge.iconFont size:62.0];
-    iconLabel.text = challenge.icon;
-    [iconLabel sizeToFit];
+    if ( !backView ) backView = (BackgroundView *)[cell viewWithTag:1];
+
+    if ( !icon ) icon = (UIImageView *)[cell viewWithTag:2];
+    [icon setImage:nil];
+    UIImage *img = [UIImage imageNamed:challenge.icon];
+    [icon setImage:img];
     
     NSString *title = [NSString stringWithFormat:@"%@: %@ points", challenge.title, challenge.pointsString];
-    if ( !titleLabel ) titleLabel = (UILabel *)[cell viewWithTag:2];
-    titleLabel.frame = CGRectMake(LEFT_MARGIN, VERT_MARGIN, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0);
-    titleLabel.text = title;
-    if ( _segmentedController.selectedSegmentIndex == 2 ) titleLabel.textColor = [UIColor neonBlue];
-    else titleLabel.textColor = [UIColor offWhite];
+    NSString *pointsText = [NSString stringWithFormat:@"%@ points", challenge.pointsString];
+    int perc = challenge.completion * 100;
+    NSString *percentText = [NSString stringWithFormat:@" (%i%% completed)", perc];
+    
+    if ( _currentSelection == 0 ) title = [title stringByAppendingString:percentText];
+    
+    NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:title];
+    NSRange pointsRange = [title rangeOfString:pointsText];
+    UIColor *pointsColor = [UIColor blueColor];
+
+    NSRange percRange = [title rangeOfString:percentText];
+    UIColor *percColor = [UIColor redColor];
+
+    [attString addAttribute:NSForegroundColorAttributeName value:pointsColor range:pointsRange];
+    if ( _currentSelection == 0 ) [attString addAttribute:NSForegroundColorAttributeName value:percColor range:percRange];
+    
+    if ( !titleLabel ) titleLabel = (UILabel *)[cell viewWithTag:3];
+    titleLabel.frame = CGRectMake(LEFT_MARGIN, backView.frame.origin.y + VERT_MARGIN, backView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 0.0);
+    titleLabel.attributedText = attString;
     [titleLabel sizeToFit];
-    
-    int yPos = roundf(titleLabel.frame.size.height + titleLabel.frame.origin.y);
-    
-    if ( !percentLable ) percentLable = (UILabel *)[cell viewWithTag:3];
-    if ( _segmentedController.selectedSegmentIndex != 0 ) percentLable.text = @"";
-    else {
-        percentLable.frame = CGRectMake(LEFT_MARGIN, yPos, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0);
-        int perc = challenge.completion * 100;
-        percentLable.text = [NSString stringWithFormat:@"%i%% completed", perc];
-        [percentLable sizeToFit];
-        yPos = roundf(percentLable.frame.size.height + percentLable.frame.origin.y);
-    }
+
+    int yPos = roundf(titleLabel.frame.size.height + titleLabel.frame.origin.y) + 2.0;
     
     if ( !descriptionLabel ) descriptionLabel = (UILabel *)[cell viewWithTag:4];
-    descriptionLabel.frame = CGRectMake(LEFT_MARGIN, yPos, _tableView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 1000.0);
+    descriptionLabel.frame = CGRectMake(titleLabel.frame.origin.x, yPos, backView.frame.size.width - LEFT_MARGIN - RIGHT_MARGIN, 0.0);
     descriptionLabel.text = challenge.description;
     [descriptionLabel sizeToFit];
 
+    CGRect frame = backView.frame;
+    frame.size.height = descriptionLabel.frame.origin.y + descriptionLabel.frame.size.height + VERT_MARGIN;
+    backView.frame = frame;
+    
 	return cell;
 }
 
@@ -283,27 +331,27 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)segmentedControlChanged:(UISegmentedControl *)sender {
-    for (int i = 0; i < [sender.subviews count]; i++) {
-        if ([[sender.subviews objectAtIndex:i]isSelected] ) {
-            UIColor *tintcolor = [UIColor neonGreen];
-            [[sender.subviews objectAtIndex:i] setTintColor:tintcolor];
-        }
-        else [[sender.subviews objectAtIndex:i] setTintColor:[UIColor blackColor]];
+- (void)segmentedBtnPressed:(id)sender {
+    for (int i = 100; i < 103; ++i) {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:i];
+        if ( i == [sender tag] ) btn.selected = YES;
+        else btn.selected = NO;
     }
     
-    switch (sender.selectedSegmentIndex) {
-        case 0:
+    switch ([sender tag]) {
+        case 100:
             self.selectedArray = _currentChallenges;
+            self.currentSelection = 0;
             break;
-        case 1:
+        case 101:
             self.selectedArray = _availableChallenges;
+            self.currentSelection = 1;
             break;
-        case 2:
+        case 102:
             self.selectedArray = _completedChallenges;
+            self.currentSelection = 2;
             break;
     }
-    
     [self.tableView reloadData];
 }
 

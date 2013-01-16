@@ -49,12 +49,7 @@
         }
     }
     
-    NSArray *entypo = @[@"profile", @"checkin", @"review"];
-    NSDictionary *icons = @{@"instagram":@"", @"facebook":@"", @"twitter":@"", @"checkin":@"", @"profile":@"👤", @"review":@""};
-    if ( [entypo containsObject:[customDataDictionary objectForKey:@"type"]] ) self.iconFont = @"Entypo";
-    else self.iconFont = @"EntypoSocial";
-    self.type = [customDataDictionary objectForKey:@"type"];
-    self.icon = [icons objectForKey:self.type];
+    self.icon = [customDataDictionary objectForKey:@"type"];
     
     if ( [[customDataDictionary objectForKey:@"leaderboard"] isEqual:@"YES"] ) self.hasLeaderboard = YES;
 }

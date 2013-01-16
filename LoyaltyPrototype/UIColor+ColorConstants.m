@@ -27,7 +27,8 @@
 }
 
 + (UIColor *)offWhite {
-    return [UIColor colorWithWhite:0.933 alpha:1.000];
+    return [UIColor colorWithRed:230.0/255.0 green:231.0/255.0 blue:232.0/255.0 alpha:1.0];
+    //return [UIColor colorWithWhite:0.933 alpha:1.000];
 }
 
 @end

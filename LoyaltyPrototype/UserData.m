@@ -21,7 +21,7 @@
 }
 
 - (NSString *)userDataPath {
-    return @"http://sandbox.bunchball.net/nitro/json?method=batch.run&methodFeed=%5B%22method=user.login%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%26userID=16%22,%22method=user.getPreferences%26userId=16%22,%22method=user.getPointsBalance%26pointCategory=all%26includeYearlyCredits=false%26criteria=BALANCE%22,%22method=user.getLevel%22,%22method=user.getNextLevel%22,%22method=site.getActionFeed%26returncount=10%26showchallengescompleted=false%26preferences=profile_name%7Cprofile_url%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%22%5D";
+    return @"http://sandbox.bunchball.net/nitro/json?method=batch.run&methodFeed=%5B%22method=user.login%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%26userID=16%22,%22method=user.getPreferences%26userId=16%22,%22method=user.getPointsBalance%26pointCategory=all%26includeYearlyCredits=false%26criteria=BALANCE%22,%22method=user.getLevel%22,%22method=user.getNextLevel%22,%22method=site.getActionFeed%26returncount=10%26showchallengescompleted=true%26preferences=profile_name%7Cprofile_url%26apiKey=a06f6dbdb43f4c2293fa615576e4c7dc%22%5D";
 }
 
 - (void)parseUserData:(NSDictionary *)data {

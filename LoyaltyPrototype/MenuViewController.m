@@ -12,6 +12,7 @@
 #import "ProfileViewController.h"
 #import "ChallengesViewController.h"
 #import "LeaderboardViewController.h"
+#import "UIFont+UrbanAdditions.h"
 
 @interface MenuViewController () {
     NSArray *tableArray;
@@ -30,8 +31,9 @@
     menu.dataSource = self;
     menu.delegate = self;
     menu.rowHeight = 34.0;
-    menu.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"menu_cell_bg"]];
-    [menu setSeparatorColor:[UIColor lightNeonGreen]];
+    menu.backgroundColor = [UIColor offWhite];
+    //menu.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"menu_cell_bg"]];
+    [menu setSeparatorColor:[UIColor blackColor]];
     [menu setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [self.view addSubview:menu];
     
@@ -53,8 +55,9 @@
         selView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
         cell.selectedBackgroundView = selView;
 
-        cell.textLabel.font = [UIFont systemFontOfSize:15.0];
-        cell.textLabel.textColor = [UIColor offWhite];
+        //cell.textLabel.font = [UIFont systemFontOfSize:15.0];
+        cell.textLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:15.0];
+        cell.textLabel.textColor = [UIColor blackColor];
     }
 
     cell.textLabel.text = [tableArray objectAtIndex:indexPath.row];

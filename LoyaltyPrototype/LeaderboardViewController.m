@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 URBN. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "LeaderboardViewController.h"
 #import "UIColor+ColorConstants.h"
 #import <MBProgressHUD.h>
@@ -13,6 +14,8 @@
 #import <UIImageView+AFNetworking.h>
 #import "NavBarItemsViewController.h"
 #import "UserData.h"
+#import "BackgroundView.h"
+#import "UIFont+UrbanAdditions.h"
 
 @interface LeaderboardViewController ()
 
@@ -24,7 +27,7 @@
 
 @property (nonatomic, strong) UIButton *dropDownBtn;
 @property (nonatomic, strong) UIButton *friendsBtn;
-@property (nonatomic, strong) UIView *greenLine;
+@property (nonatomic, strong) UIView *blackDivider;
 @property (nonatomic, strong) UIView *userDataView;
 
 @property (nonatomic, strong) UIView *pickerHolder;
@@ -33,6 +36,8 @@
 @property (nonatomic, strong) NSMutableArray *tableDataArray;
 
 @property (nonatomic, strong) NavBarItemsViewController *navBarItems;
+
+@property (nonatomic, strong) BackgroundView *controlView;
 
 @end
 
@@ -45,12 +50,8 @@
 #define AVAILABLE_BOARDS_URL @"method=user.getChallengeProgress&showonlytrophies=false&showCanAchieveChallenge=true"
 #define CHALLENGE_URL @"method=site.getActionLeaders&preferences=profile_name%7Cprofile_url&returnCount=100"
 #define MARGIN 15.0f
+#define INNER_PADDING 10.0f
 #define IMAGE_SIZE 55.0f
-
-//&criteria=count
-//&tags=STORE_CHECKIN_WALNUT
-//&duration=ALLTIME
-//&tagsOperator=or
 
 #pragma mark - UIViewController methods
 - (void)viewDidLoad {
@@ -62,7 +63,12 @@
     self.userFriends = [[NSMutableArray alloc] init];
     self.currentLeaderBoard = 0;
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"StoresBackground"]];
+    
+    self.navBarItems = [[NavBarItemsViewController alloc] init];
+    [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
+    [_navBarItems updateInfo];
+    [self.navigationController.navigationBar addSubview:_navBarItems.view];
     
     if ([self.navigationController.parentViewController respondsToSelector:@selector(revealGesture:)] &&
         [self.navigationController.parentViewController respondsToSelector:@selector(revealToggle:)])
@@ -70,43 +76,46 @@
         UIPanGestureRecognizer *navigationBarPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.navigationController.parentViewController action:@selector(revealGesture:)];
 		[self.navigationController.navigationBar addGestureRecognizer:navigationBarPanGestureRecognizer];
 		
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"\u2630" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
-        [self.navigationItem.leftBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                       [UIFont fontWithName:@"Entypo" size:50.0], UITextAttributeFont,
-                                                                       [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+		
+        UIImage *leftImg = [UIImage imageNamed:@"menuBtn"];
+        UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        leftButton.frame = CGRectMake(10.0, 5.0, leftImg.size.width, leftImg.size.height);
+        [leftButton setImage:leftImg forState:UIControlStateNormal];
+        [leftButton addTarget:self.navigationController.parentViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationController.navigationBar addSubview:leftButton];
 	}
-
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"🔁" style:UIBarButtonItemStylePlain target:self action:@selector(refreshData)];
-    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [UIFont fontWithName:@"Entypo" size:45.0], UITextAttributeFont,
-                                                                    [UIColor neonGreen], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
-
-    self.navBarItems = [[NavBarItemsViewController alloc] init];
-    _navBarItems.view.frame = self.navigationController.navigationBar.bounds;
-    [self.navigationController.navigationBar addSubview:_navBarItems.view];
-    [_navBarItems updateInfo];
+    
+    UIImage *rightImg = [UIImage imageNamed:@"refreshBtn"];
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(self.view.frame.size.width - rightImg.size.width - 10.0, 5.0, rightImg.size.width, rightImg.size.height);
+    [rightBtn setImage:rightImg forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationController.navigationBar addSubview:rightBtn];
     
     CGFloat totalWidth = self.view.frame.size.width - (MARGIN * 2);
     
-    UILabel *chooseLabel = [[UILabel alloc] initWithFrame:CGRectMake(MARGIN + 3.0, self.navigationController.navigationBar.frame.size.height + 5.0, 0, 0)];
+    self.controlView = [[BackgroundView alloc] initWithFrame:CGRectMake(MARGIN, self.navigationController.navigationBar.frame.size.height + MARGIN, totalWidth, 200.0)];
+    [self.view addSubview:_controlView];
+    
+    UILabel *chooseLabel = [[UILabel alloc] initWithFrame:CGRectMake(INNER_PADDING, INNER_PADDING, 0, 0)];
     chooseLabel.backgroundColor = [UIColor clearColor];
-    chooseLabel.textColor = [UIColor offWhite];
-    chooseLabel.font = [UIFont systemFontOfSize:12.0];
+    chooseLabel.textColor = [UIColor blackColor];
+    chooseLabel.font = [UIFont fontNamedLoRes22BoldOaklandWithSize:17.0];
     chooseLabel.text = @"Choose a leader board:";
     [chooseLabel sizeToFit];
-    [self.view addSubview:chooseLabel];
+    [_controlView addSubview:chooseLabel];
     
     UIImage *dropDownImg = [UIImage imageNamed:@"dropDownBG"];
     self.dropDownBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    _dropDownBtn.frame = CGRectMake(MARGIN, chooseLabel.frame.size.height + chooseLabel.frame.origin.y + 5.0, dropDownImg.size.width, dropDownImg.size.height);
+    _dropDownBtn.frame = CGRectMake(INNER_PADDING, chooseLabel.frame.size.height + chooseLabel.frame.origin.y + 5.0, dropDownImg.size.width, dropDownImg.size.height);
     [_dropDownBtn setImage:dropDownImg forState:UIControlStateNormal];
     [_dropDownBtn addTarget:self action:@selector(dropDownPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_dropDownBtn];
+    [_controlView addSubview:_dropDownBtn];
     
-    UILabel *dropDownLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 5.0, 0.0, 0.0)];
+    UILabel *dropDownLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 6.0, 0.0, 0.0)];
     dropDownLabel.backgroundColor = [UIColor clearColor];
-    dropDownLabel.textColor = [UIColor offWhite];
-    dropDownLabel.font = [UIFont systemFontOfSize:14.0];
+    dropDownLabel.textColor = [UIColor blackColor];
+    dropDownLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:15.0];
     dropDownLabel.text = @"Overall";
     [dropDownLabel sizeToFit];
     dropDownLabel.tag = 1;
@@ -114,44 +123,51 @@
     
     UIImage *friendToggleImg = [UIImage imageNamed:@"friendsToggleBtn"];
     self.friendsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    _friendsBtn.frame = CGRectMake(totalWidth - friendToggleImg.size.width*.5,
+    _friendsBtn.frame = CGRectMake(_controlView.frame.size.width - friendToggleImg.size.width - INNER_PADDING - 5.0,
                                         _dropDownBtn.frame.origin.y,
                                         friendToggleImg.size.width,
                                         friendToggleImg.size.height);
     [_friendsBtn setImage:friendToggleImg forState:UIControlStateNormal];
-    [_friendsBtn setImage:[UIImage imageNamed:@"friendsToggleBtnSelected"] forState:UIControlStateSelected];
+    [_friendsBtn setImage:[UIImage imageNamed:@"friendsToggleBtn-selected"] forState:UIControlStateSelected];
     [_friendsBtn addTarget:self action:@selector(friendsTogglePressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_friendsBtn];
+    [_controlView addSubview:_friendsBtn];
     
     UILabel *friendsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, chooseLabel.frame.origin.y, 0.0, 0.0)];
     friendsLabel.backgroundColor = [UIColor clearColor];
-    friendsLabel.textColor = [UIColor offWhite];
-    friendsLabel.font = [UIFont systemFontOfSize:12.0];
+    friendsLabel.textColor = [UIColor blackColor];
+    friendsLabel.font = [UIFont fontNamedLoRes22BoldOaklandWithSize:17.0];
     friendsLabel.text = @"Friends only?";
     [friendsLabel sizeToFit];
     CGRect frame = friendsLabel.frame;
     frame.origin.x = roundf((_friendsBtn.frame.origin.x + _friendsBtn.bounds.size.width) - frame.size.width);
     friendsLabel.frame = frame;
-    [self.view addSubview:friendsLabel];
+    [_controlView addSubview:friendsLabel];
     
-    
-    self.greenLine = [[UIView alloc] initWithFrame:CGRectMake(MARGIN,
-                                                                 _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + MARGIN,
-                                                                 totalWidth,
-                                                                 1.0)];
-    _greenLine.backgroundColor = [UIColor neonGreen];
-    _greenLine.alpha = 0.3;
-    [self.view addSubview:_greenLine];
+    frame = _controlView.frame;
+    frame.size.height = _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + INNER_PADDING + 5.0;
+    _controlView.frame = frame;
 
+    self.blackDivider = [[UIView alloc] initWithFrame:CGRectMake(15.0,
+                                                                    _controlView.frame.origin.y + _controlView.frame.size.height + 10.0,
+                                                                    self.view.frame.size.width - 30.0, 3.0)];
+    _blackDivider.backgroundColor = [UIColor blackColor];
+
+    
     self.leaderTable = [[UITableView alloc] initWithFrame:CGRectMake(MARGIN,
-                                                                   _greenLine.frame.origin.y + 1.0,
-                                                                   self.view.frame.size.width - 30.0,
-                                                                   self.view.frame.size.height - _greenLine.frame.origin.y - 1.0)];
+                                                                     _blackDivider.frame.origin.y + 3.0,
+                                                                     self.view.frame.size.width - MARGIN*2,
+                                                                     self.view.frame.size.height - _blackDivider.frame.origin.y - 3.0)];
     _leaderTable.dataSource = self;
     _leaderTable.delegate = self;
     _leaderTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     _leaderTable.backgroundColor = [UIColor clearColor];
+    _leaderTable.contentInset = UIEdgeInsetsMake(5.0, 0.0, 5.0, 0.0);
     [self.view addSubview:_leaderTable];
+    
+    
+    
+    [self.view addSubview:_blackDivider];
+
     
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -212,12 +228,15 @@
                                 completionBlock:^(NSArray *operations) {
                                     [self finishedBatchOperationBatch];
                                 }];
+     
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 
 #pragma mark - Data Processing methods
@@ -302,14 +321,15 @@
     UILabel *levelLabel;
     
     if ( !_userDataView ) {
-        self.userDataView = [[UIView alloc] initWithFrame:CGRectMake(MARGIN,
-                                                                     _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + 5.0,
-                                                                     self.view.frame.size.width - MARGIN * 2,
-                                                                     IMAGE_SIZE + 20.0)];
-        _userDataView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+        self.userDataView = [[UIView alloc] initWithFrame:CGRectMake(INNER_PADDING,
+                                                                     _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + INNER_PADDING + 5.0,
+                                                                     _controlView.frame.size.width - INNER_PADDING * 2,
+                                                                     IMAGE_SIZE)];
         
 
-        profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, IMAGE_SIZE, IMAGE_SIZE)];
+        profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, IMAGE_SIZE, IMAGE_SIZE)];
+        profileImageView.layer.borderWidth = 2;
+        profileImageView.layer.borderColor = [UIColor blackColor].CGColor;
         profileImageView.tag = 1;
         [_userDataView addSubview:profileImageView];
         
@@ -318,22 +338,22 @@
                                                                 0.0,
                                                                 0.0)];
         handleLabel.backgroundColor = [UIColor clearColor];
-        handleLabel.font = [UIFont systemFontOfSize:18.0];
+        handleLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:18.0];
+        handleLabel.textColor = [UIColor blackColor];
         handleLabel.tag = 2;
         [_userDataView addSubview:handleLabel];
         
         pointsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         pointsLabel.backgroundColor = [UIColor clearColor];
-        pointsLabel.font = [UIFont boldSystemFontOfSize:13.0];
-        pointsLabel.textColor = [UIColor offWhite];
+        pointsLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
+        pointsLabel.textColor = [UIColor blueColor];
         pointsLabel.tag = 3;
         [_userDataView addSubview:pointsLabel];
         
         levelLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         levelLabel.backgroundColor = [UIColor clearColor];
-        levelLabel.font = [UIFont boldSystemFontOfSize:13.0];
-        levelLabel.textColor = [UIColor neonGreen];
-        levelLabel.alpha = 0.5;
+        levelLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
+        levelLabel.textColor = [UIColor blackColor];
         levelLabel.tag = 4;
         [_userDataView addSubview:levelLabel];
     }
@@ -343,14 +363,11 @@
     
     if ( !handleLabel ) handleLabel = (UILabel *)[_userDataView viewWithTag:2];
     handleLabel.text = [NSString stringWithFormat:@"%i: %@ (you)", rank, [handle uppercaseString]];
-    if ( [gender isEqualToString:@"M"] ) handleLabel.textColor = [UIColor neonBlue];
-    else if ( [gender isEqualToString:@"F"] ) handleLabel.textColor = [UIColor neonPink];
-    else handleLabel.textColor = [UIColor neonGreen];
     [handleLabel sizeToFit];
     
     if ( !pointsLabel ) pointsLabel = (UILabel *)[_userDataView viewWithTag:3];
     pointsLabel.frame = CGRectMake(handleLabel.frame.origin.x, handleLabel.frame.origin.y + handleLabel.frame.size.height + 2.0, 0.0, 0.0);
-    pointsLabel.text = [NSString stringWithFormat:@"%@ points.", formattedPoints];
+    pointsLabel.text = [NSString stringWithFormat:@"%@ points", formattedPoints];
     [pointsLabel sizeToFit];
     
     if ( !levelLabel ) levelLabel = (UILabel *)[_userDataView viewWithTag:4];
@@ -364,14 +381,19 @@
     levelLabel.text = levelText;
     [levelLabel sizeToFit];
     
-    CGRect frame = _greenLine.frame;
-    frame.origin.y = _userDataView.frame.origin.y + _userDataView.frame.size.height + 5.0;
-    _greenLine.frame = frame;
+    CGRect frame = _controlView.frame;
+    frame.size.height = _userDataView.frame.origin.y + _userDataView.frame.size.height + INNER_PADDING + 5.0;
+    _controlView.frame = frame;
+    [_controlView setNeedsDisplay];
+
+    frame = _blackDivider.frame;
+    frame.origin.y = _controlView.frame.origin.y + _controlView.frame.size.height + 10.0;
+    _blackDivider.frame = frame;
     
     _leaderTable.frame = CGRectMake(MARGIN,
-                                    _greenLine.frame.origin.y + 1.0,
-                                    self.view.frame.size.width - 30.0,
-                                    self.view.frame.size.height - _greenLine.frame.origin.y - 1.0);
+                                    _blackDivider.frame.origin.y + 3.0,
+                                    self.view.frame.size.width - MARGIN*2,
+                                    self.view.frame.size.height - _blackDivider.frame.origin.y - 3.0);
 }
 
 - (void)finishedLoadingFriends:(NSDictionary *)JSON {
@@ -383,25 +405,30 @@
 }
 
 - (void)finishedLoadingLeaderBoard:(NSDictionary *)JSON {
-    CGRect frame = _greenLine.frame;
+    CGRect frame = _controlView.frame;
     if ( _currentLeaderBoard == 0 ) {
         JSON = [JSON objectForKey:@"leaders"];
         [self parseOverallLeaderBoard:JSON];
-        [self.view addSubview:_userDataView];
-        frame.origin.y = _userDataView.frame.origin.y + _userDataView.frame.size.height + 5.0;
+        [_controlView addSubview:_userDataView];
+        frame.size.height = _userDataView.frame.origin.y + _userDataView.frame.size.height + INNER_PADDING + 5.0;
     }
     else {
         JSON = [JSON objectForKey:@"actions"];
         [self parseChallengeLeaderBoard:JSON];
         [_userDataView removeFromSuperview];
-        frame.origin.y = _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + 10.0;
+        frame.size.height = _dropDownBtn.frame.origin.y + _dropDownBtn.frame.size.height + INNER_PADDING + 5.0;
     }
     
-    _greenLine.frame = frame;
+    _controlView.frame = frame;
+    [_controlView setNeedsDisplay];
+    
+    frame = _blackDivider.frame;
+    frame.origin.y = _controlView.frame.origin.y + _controlView.frame.size.height + 10.0;
+    _blackDivider.frame = frame;
     
     frame = _leaderTable.frame;
-    frame.origin.y = _greenLine.frame.origin.y + 1.0;
-    frame.size.height = self.view.frame.size.height - _greenLine.frame.origin.y - 1.0;
+    frame.origin.y = _blackDivider.frame.origin.y + 3.0;
+    frame.size.height = self.view.frame.size.height - _blackDivider.frame.origin.y - 3.0;
     _leaderTable.frame = frame;
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -530,7 +557,7 @@
     
     [_leaderTable reloadData];
     
-    [self.view addSubview:_userDataView];
+    [_controlView addSubview:_userDataView];
 }
 
 #pragma mark - UIButton Action methods
@@ -652,7 +679,7 @@
 
 #pragma mark - UITableViewDelegate methods
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return IMAGE_SIZE + 20.0;
+    return IMAGE_SIZE + INNER_PADDING*2 + 10.0;
 }
 
 #pragma mark - UITableViewDataSource methods
@@ -664,6 +691,7 @@
     static NSString *cellIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
+    BackgroundView *cellBack = nil;
     UIImageView *profileImageView = nil;
     UILabel *handleLabel = nil;
     UILabel *pointsLabel = nil;
@@ -672,35 +700,42 @@
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         
+        cellBack = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, INNER_PADDING*.5, tableView.frame.size.width, IMAGE_SIZE + INNER_PADDING*2 + 5.0)];
+        [[cell contentView] addSubview:cellBack];
+        
         UIView *selView = [[UIView alloc] initWithFrame:cell.frame];
         selView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
         cell.selectedBackgroundView = selView;
 
-        profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, IMAGE_SIZE, IMAGE_SIZE)];
+        profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(INNER_PADDING, cellBack.frame.origin.y + INNER_PADDING, IMAGE_SIZE, IMAGE_SIZE)];
+        profileImageView.layer.borderWidth = 2;
+        profileImageView.layer.borderColor = [UIColor blackColor].CGColor;
         profileImageView.tag = 1;
+        
         [[cell contentView] addSubview:profileImageView];
         
         handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(profileImageView.frame.origin.x + profileImageView.frame.size.width + 15.0,
                                                                 profileImageView.frame.origin.y - 1.0,
                                                                 0.0,
                                                                 0.0)];
+
         handleLabel.backgroundColor = [UIColor clearColor];
-        handleLabel.font = [UIFont systemFontOfSize:18.0];
+        handleLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:18.0];
+        handleLabel.textColor = [UIColor blackColor];
         handleLabel.tag = 2;
         [[cell contentView] addSubview:handleLabel];
         
         pointsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         pointsLabel.backgroundColor = [UIColor clearColor];
-        pointsLabel.font = [UIFont boldSystemFontOfSize:13.0];
-        pointsLabel.textColor = [UIColor offWhite];
+        pointsLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
+        pointsLabel.textColor = [UIColor blueColor];
         pointsLabel.tag = 3;
         [[cell contentView] addSubview:pointsLabel];
         
         levelLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         levelLabel.backgroundColor = [UIColor clearColor];
-        levelLabel.font = [UIFont boldSystemFontOfSize:13.0];
-        levelLabel.textColor = [UIColor neonGreen];
-        levelLabel.alpha = 0.5;
+        levelLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
+        levelLabel.textColor = [UIColor blackColor];
         levelLabel.tag = 4;
         [[cell contentView] addSubview:levelLabel];
     }
@@ -722,24 +757,21 @@
                     0.0);
     
     handleLabel.text = [NSString stringWithFormat:@"%i: %@", indexPath.row + 1, [[userDict objectForKey:@"handle"] uppercaseString]];
-    if ( [[userDict objectForKey:@"gender"] isEqualToString:@"M"] ) handleLabel.textColor = [UIColor neonBlue];
-    else if ( [[userDict objectForKey:@"gender"] isEqualToString:@"F"] ) handleLabel.textColor = [UIColor neonPink];
-    else handleLabel.textColor = [UIColor neonGreen];
     [handleLabel sizeToFit];
     
     if ( !pointsLabel ) pointsLabel = (UILabel *)[cell viewWithTag:3];
     
     NSString *pointsText = nil;
     if ( _currentLeaderBoard == 0 ) {
-        pointsLabel.font = [UIFont boldSystemFontOfSize:13.0];
+        pointsLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
         pointsLabel.frame = CGRectMake(handleLabel.frame.origin.x, handleLabel.frame.origin.y + handleLabel.frame.size.height + 2.0, 0.0, 0.0);
-        pointsText = [NSString stringWithFormat:@"%@ points.", [userDict objectForKey:@"formattedPoints"]];
+        pointsText = [NSString stringWithFormat:@"%@ points", [userDict objectForKey:@"formattedPoints"]];
     }
     else {
-        pointsLabel.font = [UIFont boldSystemFontOfSize:15.0];
+        pointsLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:16.0];
         pointsLabel.frame = CGRectMake(handleLabel.frame.origin.x, handleLabel.frame.origin.y + handleLabel.frame.size.height + 6.0, 0.0, 0.0);
         NSString *qualifier = [[_availableLeaderBoards objectAtIndex:_currentLeaderBoard] objectForKey:@"qualifier"];
-        pointsText = [NSString stringWithFormat:@"%@ %@.", [userDict objectForKey:@"formattedPoints"], qualifier];
+        pointsText = [NSString stringWithFormat:@"%@ %@", [userDict objectForKey:@"formattedPoints"], qualifier];
     }
     
     pointsLabel.text = pointsText;
@@ -748,7 +780,7 @@
     if ( !levelLabel ) levelLabel = (UILabel *)[cell viewWithTag:4];
     
     if ( _currentLeaderBoard == 0 ) {
-        levelLabel.alpha = 0.5;
+        levelLabel.alpha = 1.0;
         levelLabel.frame = CGRectMake(pointsLabel.frame.origin.x, pointsLabel.frame.origin.y + pointsLabel.frame.size.height + 2.0, 0.0, 0.0);
         
         NSString *levelText = nil;
