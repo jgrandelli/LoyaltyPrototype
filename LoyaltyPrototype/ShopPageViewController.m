@@ -72,13 +72,36 @@
     UIView *promoBack = [[BackgroundView alloc] initWithFrame:CGRectMake(15.0, _titleBar.frame.origin.y + _titleBar.frame.size.height + 15.0, self.view.frame.size.width - 30.0, 200.0)];
     [self.view addSubview:promoBack];
     
+    UIImageView *promoImg = [[UIImageView alloc] initWithFrame:CGRectMake(promoBack.frame.origin.x + 3.0, promoBack.frame.origin.y + 3.0, 279.0, 189.0)];
+    promoImg.tag = 2;
+    [self.view addSubview:promoImg];
+    
+    CGFloat yPos = promoBack.frame.origin.y + promoBack.frame.size.height + 20.0;
+    NSArray *arr = @[@"Collections", @"New Arrivals", @"Spring Preview", @"Tops", @"Outerwear", @"Shoes", @"Accessories"];
+    for ( int i = 0; i < 6; ++i ) {
+        BackgroundView *catBack = [[BackgroundView alloc] initWithFrame:CGRectMake(15.0, yPos, promoBack.frame.size.width, 40.0)];
+        [self.view addSubview:catBack];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 2.0, catBack.frame.size.width, catBack.frame.size.height - 11.0)];
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor blackColor];
+        label.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:16.0];
+        label.text = [arr objectAtIndex:i];
+        [catBack addSubview:label];
+        
+        yPos += catBack.frame.size.height + 10.0;
+    }
+    
     [self updateViewWithTitle:_department];
 }
 
 - (void)updateViewWithTitle:(NSString *)title {
     UILabel *titleLabel = (UILabel *)[_titleBar viewWithTag:1];
     titleLabel.text = title;
-    NSLog(@"title label = %@", titleLabel);
+    
+    NSString *imgName = [NSString stringWithFormat:@"%@Promo", [title lowercaseString]];
+    UIImageView *promoImg = (UIImageView *)[self.view viewWithTag:2];
+    [promoImg setImage:[UIImage imageNamed:imgName]];
 }
 
 - (void)didReceiveMemoryWarning {
