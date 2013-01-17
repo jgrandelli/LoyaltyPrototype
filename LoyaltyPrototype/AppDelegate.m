@@ -24,7 +24,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     [[UserData sharedInstance] retrieveInitialSessionKey];
-    
+
+    // Let the device know we want to receive push notifications
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+
     // Override point for customization after application launch.
 	//StatusViewController *profileVC = [[StatusViewController alloc] init];
 	ShopPageViewController *shopVC = [[ShopPageViewController alloc] init];
@@ -51,6 +55,18 @@
     
     return YES;
 }
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+	NSLog(@"My token is: %@", deviceToken);
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
+
+
 
 - (void)customizeAppearance {
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];

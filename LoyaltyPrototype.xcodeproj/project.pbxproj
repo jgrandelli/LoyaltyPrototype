@@ -606,7 +606,8 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jason Grandelli (Z53472LY6A)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: urban outfitters";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: urban outfitters";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -621,7 +622,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "25DE8E9D-1611-4B22-8180-20977D0F5A79";
+				PROVISIONING_PROFILE = "70358004-D2B5-4B81-A7FD-6228462D33B5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70358004-D2B5-4B81-A7FD-6228462D33B5";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -636,7 +638,8 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: urban outfitters";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: urban outfitters";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -644,6 +647,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "70358004-D2B5-4B81-A7FD-6228462D33B5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70358004-D2B5-4B81-A7FD-6228462D33B5";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -654,13 +659,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0DD7CD31E2064E308DDFEE19 /* Pods.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jason Grandelli (Z53472LY6A)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: urban outfitters";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: urban outfitters";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LoyaltyPrototype/LoyaltyPrototype-Prefix.pch";
 				INFOPLIST_FILE = "LoyaltyPrototype/LoyaltyPrototype-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "25DE8E9D-1611-4B22-8180-20977D0F5A79";
+				PROVISIONING_PROFILE = "70358004-D2B5-4B81-A7FD-6228462D33B5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "70358004-D2B5-4B81-A7FD-6228462D33B5";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -669,11 +676,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0DD7CD31E2064E308DDFEE19 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: urban outfitters";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LoyaltyPrototype/LoyaltyPrototype-Prefix.pch";
 				INFOPLIST_FILE = "LoyaltyPrototype/LoyaltyPrototype-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "70358004-D2B5-4B81-A7FD-6228462D33B5";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
