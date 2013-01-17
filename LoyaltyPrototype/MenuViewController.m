@@ -10,7 +10,7 @@
 #import "MenuViewController.h"
 #import "UIColor+ColorConstants.h"
 #import "ViewController.h"
-#import "ProfileViewController.h"
+#import "StatusViewController.h"
 #import "ChallengesViewController.h"
 #import "LeaderboardViewController.h"
 #import "UIFont+UrbanAdditions.h"
@@ -147,8 +147,8 @@
         }
     }
     if ( [selection isEqualToString:@"MYUO Status"] ) {
-        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ProfileViewController class]] ) {
-            ProfileViewController *profileVC = [[ProfileViewController alloc] init];
+        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[StatusViewController class]] ) {
+            StatusViewController *profileVC = [[StatusViewController alloc] init];
             [self loadNewFrontviewWithViewController:profileVC];
         }
         else [revealController revealToggle:self];

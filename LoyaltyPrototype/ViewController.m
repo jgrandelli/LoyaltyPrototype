@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "ProfileViewController.h"
+#import "StatusViewController.h"
 #import "MenuViewController.h"
 #import "UIColor+ColorConstants.h"
 #import <MBProgressHUD.h>

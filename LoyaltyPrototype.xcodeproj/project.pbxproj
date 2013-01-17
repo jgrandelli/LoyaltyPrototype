@@ -51,7 +51,7 @@
 		458B843F166FED0C00E63FD3 /* Entypo-Social.otf in Resources */ = {isa = PBXBuildFile; fileRef = 458B843D166FED0C00E63FD3 /* Entypo-Social.otf */; };
 		458B8440166FED0C00E63FD3 /* Entypo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 458B843E166FED0C00E63FD3 /* Entypo.otf */; };
 		458B8444166FEF2600E63FD3 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B8443166FEF2600E63FD3 /* MenuViewController.m */; };
-		458B844E1671010400E63FD3 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B844D1671010400E63FD3 /* ProfileViewController.m */; };
+		458B844E1671010400E63FD3 /* StatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B844D1671010400E63FD3 /* StatusViewController.m */; };
 		458B84511671024500E63FD3 /* UIColor+ColorConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B84501671024500E63FD3 /* UIColor+ColorConstants.m */; };
 		458B846E16713FF700E63FD3 /* profile_img.png in Resources */ = {isa = PBXBuildFile; fileRef = 458B846916713FF700E63FD3 /* profile_img.png */; };
 		458B846F16713FF700E63FD3 /* profile_img@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 458B846A16713FF700E63FD3 /* profile_img@2x.png */; };
@@ -155,8 +155,8 @@
 		458B843E166FED0C00E63FD3 /* Entypo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.otf; sourceTree = "<group>"; };
 		458B8442166FEF2600E63FD3 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		458B8443166FEF2600E63FD3 /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
-		458B844C1671010400E63FD3 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		458B844D1671010400E63FD3 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		458B844C1671010400E63FD3 /* StatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusViewController.h; sourceTree = "<group>"; };
+		458B844D1671010400E63FD3 /* StatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusViewController.m; sourceTree = "<group>"; };
 		458B844F1671024500E63FD3 /* UIColor+ColorConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorConstants.h"; sourceTree = "<group>"; };
 		458B84501671024500E63FD3 /* UIColor+ColorConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorConstants.m"; sourceTree = "<group>"; };
 		458B846916713FF700E63FD3 /* profile_img.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_img.png; sourceTree = "<group>"; };
@@ -374,8 +374,8 @@
 				458B8443166FEF2600E63FD3 /* MenuViewController.m */,
 				4575AB9016A74CD7009A24B8 /* ShopPageViewController.h */,
 				4575AB9116A74CD7009A24B8 /* ShopPageViewController.m */,
-				458B844C1671010400E63FD3 /* ProfileViewController.h */,
-				458B844D1671010400E63FD3 /* ProfileViewController.m */,
+				458B844C1671010400E63FD3 /* StatusViewController.h */,
+				458B844D1671010400E63FD3 /* StatusViewController.m */,
 				4581BBFA1678DCD4006E185F /* ChallengesViewController.h */,
 				4581BBFB1678DCD4006E185F /* ChallengesViewController.m */,
 				45117F8F16948BCD00448715 /* ChallengeDetailViewController.h */,
@@ -565,7 +565,7 @@
 				45BD9795166FE34C00C0695B /* AppDelegate.m in Sources */,
 				45BD979E166FE34C00C0695B /* ViewController.m in Sources */,
 				458B8444166FEF2600E63FD3 /* MenuViewController.m in Sources */,
-				458B844E1671010400E63FD3 /* ProfileViewController.m in Sources */,
+				458B844E1671010400E63FD3 /* StatusViewController.m in Sources */,
 				458B84511671024500E63FD3 /* UIColor+ColorConstants.m in Sources */,
 				4581BBFC1678DCD4006E185F /* ChallengesViewController.m in Sources */,
 				4581BC13167B81F5006E185F /* ChallengeData.m in Sources */,

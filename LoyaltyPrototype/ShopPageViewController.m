@@ -77,7 +77,7 @@
     [self.view addSubview:promoImg];
     
     CGFloat yPos = promoBack.frame.origin.y + promoBack.frame.size.height + 20.0;
-    NSArray *arr = @[@"Collections", @"New Arrivals", @"Spring Preview", @"Tops", @"Outerwear", @"Shoes", @"Accessories"];
+    NSArray *arr = @[@"Collections", @"New Arrivals", @"Spring Preview", @"Outerwear", @"Shoes", @"Accessories"];
     for ( int i = 0; i < 6; ++i ) {
         BackgroundView *catBack = [[BackgroundView alloc] initWithFrame:CGRectMake(15.0, yPos, promoBack.frame.size.width, 40.0)];
         [self.view addSubview:catBack];

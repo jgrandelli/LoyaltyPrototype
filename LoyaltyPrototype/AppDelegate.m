@@ -10,9 +10,10 @@
 
 #import "ViewController.h"
 #import "UIColor+ColorConstants.h"
-#import "ProfileViewController.h"
+#import "StatusViewController.h"
 #import "MenuViewController.h"
 #import "NavBarItemsViewController.h"
+#import "ShopPageViewController.h"
 
 @implementation AppDelegate
 
@@ -22,11 +23,13 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Override point for customization after application launch.
-	ProfileViewController *profileVC = [[ProfileViewController alloc] init];
-	MenuViewController *menuVC = [[MenuViewController alloc] init];
+	//StatusViewController *profileVC = [[StatusViewController alloc] init];
+	ShopPageViewController *shopVC = [[ShopPageViewController alloc] init];
+    shopVC.department = @"Womens";
+    MenuViewController *menuVC = [[MenuViewController alloc] init];
 	
-    //UINavigationController *navigationController = [[UINavigationController alloc] init];
-	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
+	//UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shopVC];
     ViewController *revealController = [[ViewController alloc] initWithFrontViewController:navigationController
                                                            rearViewController:menuVC];
     

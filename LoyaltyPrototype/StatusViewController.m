@@ -1,5 +1,5 @@
 //
-//  ProfileViewController.m
+//  StatusViewController.m
 //  LoyaltyPrototype
 //
 //  Created by Jason Grandelli on 12/6/12.
@@ -7,7 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import "ProfileViewController.h"
+#import "StatusViewController.h"
 #import "UIColor+ColorConstants.h"
 #import <MBProgressHUD.h>
 #import <AFNetworking.h>
@@ -17,7 +17,7 @@
 #import "BackgroundView.h"
 #import "UIFont+UrbanAdditions.h"
 
-@interface ProfileViewController()
+@interface StatusViewController()
 
 @property (nonatomic, strong) NavBarItemsViewController *navBarItems;
 @property (nonatomic, strong) UILabel *nameLabel;
@@ -30,7 +30,7 @@
 
 @end
 
-@implementation ProfileViewController
+@implementation StatusViewController
 
 #define MARGIN 15.0f
 

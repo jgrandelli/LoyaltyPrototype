@@ -1,5 +1,5 @@
 //
-//  ProfileViewController.h
+//  StatusViewController.h
 //  LoyaltyPrototype
 //
 //  Created by Jason Grandelli on 12/6/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController
+@interface StatusViewController : UIViewController
 
 @end
