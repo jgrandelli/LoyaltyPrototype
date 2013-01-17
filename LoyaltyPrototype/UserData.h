@@ -34,5 +34,6 @@
 
 + (id)sharedInstance;
 - (void)parseUserData:(NSDictionary *)data;
+- (void)retrieveInitialSessionKey;
 
 @end

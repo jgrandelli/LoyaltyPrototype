@@ -15,6 +15,7 @@
 #import "LeaderboardViewController.h"
 #import "UIFont+UrbanAdditions.h"
 #import "ShopPageViewController.h"
+#import "ProfileViewController.h"
 
 @interface MenuViewController () {
     NSArray *tableArray;
@@ -148,7 +149,14 @@
     }
     if ( [selection isEqualToString:@"MYUO Status"] ) {
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[StatusViewController class]] ) {
-            StatusViewController *profileVC = [[StatusViewController alloc] init];
+            StatusViewController *statusVC = [[StatusViewController alloc] init];
+            [self loadNewFrontviewWithViewController:statusVC];
+        }
+        else [revealController revealToggle:self];
+    }
+    else if ( [selection isEqualToString:@"MYUO Profile"] ) {
+        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ProfileViewController class]] ) {
+            ProfileViewController *profileVC = [[ProfileViewController alloc] init];
             [self loadNewFrontviewWithViewController:profileVC];
         }
         else [revealController revealToggle:self];

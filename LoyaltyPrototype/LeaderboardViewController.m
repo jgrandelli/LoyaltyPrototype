@@ -63,7 +63,9 @@
     self.userFriends = [[NSMutableArray alloc] init];
     self.currentLeaderBoard = 0;
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"StoresBackground"]];
+    int i = (arc4random() % 9) + 1;
+    NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
     self.navBarItems = [[NavBarItemsViewController alloc] init];
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];

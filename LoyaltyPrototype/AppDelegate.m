@@ -14,6 +14,7 @@
 #import "MenuViewController.h"
 #import "NavBarItemsViewController.h"
 #import "ShopPageViewController.h"
+#import "UserData.h"
 
 @implementation AppDelegate
 
@@ -21,6 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    [[UserData sharedInstance] retrieveInitialSessionKey];
     
     // Override point for customization after application launch.
 	//StatusViewController *profileVC = [[StatusViewController alloc] init];

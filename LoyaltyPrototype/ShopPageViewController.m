@@ -23,7 +23,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background3"]];
+    int i = (arc4random() % 9) + 1;
+    NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
 
     NavBarItemsViewController *navBarItems = [[NavBarItemsViewController alloc] init];
     navBarItems.pageType = @"shopping";

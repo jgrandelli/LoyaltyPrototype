@@ -38,7 +38,9 @@
     
     [self.navigationItem setHidesBackButton:YES];
 
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background7"]];
+    int i = (arc4random() % 9) + 1;
+    NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
     BackgroundView *backView = [[BackgroundView alloc] initWithFrame:CGRectMake(MARGIN, self.navigationController.navigationBar.frame.size.height + MARGIN, self.view.frame.size.width - MARGIN*2, 0.0)];
     [self.view addSubview:backView];
@@ -172,11 +174,6 @@
     rulesHolder.frame = frame;
     
     backView.frame = rulesHolder.frame;
-    
-    NSLog(@"scroll view content height, actual height = %f, %f", scrollView.contentSize.height, scrollView.frame.size.height);
-    
-    //scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, yPos);
-    //NSLog(@"scroll view content height, actual height = %f, %f", scrollView.contentSize.height, scrollView.frame.size.height);
     
     [rulesHolder addSubview:scrollView];
 

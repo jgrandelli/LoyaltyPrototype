@@ -7,6 +7,7 @@
 //
 
 #import "UserData.h"
+#import <AFNetworking.h>
 
 @implementation UserData
 
@@ -18,6 +19,25 @@
     });
     
     return  __sharedInstance;
+}
+
+/*
+- (NSString *)sessionKey {
+    NSLog(@"getting sesssion key");
+    return @"";
+}
+ */
+
+- (void)retrieveInitialSessionKey {
+    NSURL *userURL = [NSURL URLWithString:@"http://sandbox.bunchball.net/nitro/json/nitro/json?apiKey=a06f6dbdb43f4c2293fa615576e4c7dc&method=user.login&userId=16"];
+    NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:userReq
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                                                            JSON = [[JSON objectForKey:@"Nitro"]objectForKey:@"Login"];
+                                                                                            self.sessionKey = [JSON objectForKey:@"sessionKey"];
+                                                                                        }
+                                                                                        failure:nil];
+    [operation start];
 }
 
 - (NSString *)userDataPath {
