@@ -120,8 +120,9 @@
     NSString *text = [[tableArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
     if ( !icon ) icon = (UIImageView *)[[cell contentView] viewWithTag:1];
+    NSString *path = [[text stringByReplacingOccurrencesOfString:@" " withString:@"_"] lowercaseString];
     [icon setImage:nil];
-    [icon setImage:[UIImage imageNamed:[text lowercaseString]]];
+    [icon setImage:[UIImage imageNamed:path]];
     
     cell.textLabel.text = text;
 	
