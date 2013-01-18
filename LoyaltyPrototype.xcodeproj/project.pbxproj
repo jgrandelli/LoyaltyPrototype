@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450A647116A9BA33007FD8D0 /* check-in@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647016A9BA33007FD8D0 /* check-in@2x.png */; };
+		450A647416A9BA43007FD8D0 /* gift@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647316A9BA43007FD8D0 /* gift@2x.png */; };
+		450A647616A9BA5B007FD8D0 /* myuo_id@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647516A9BA5B007FD8D0 /* myuo_id@2x.png */; };
+		450A647816A9BA67007FD8D0 /* qr_scanner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647716A9BA67007FD8D0 /* qr_scanner@2x.png */; };
+		450A647A16A9BA78007FD8D0 /* uochallengesu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647916A9BA78007FD8D0 /* uochallengesu@2x.png */; };
+		450A647C16A9BA83007FD8D0 /* uoleaders@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A647B16A9BA83007FD8D0 /* uoleaders@2x.png */; };
 		45117F9116948BCD00448715 /* ChallengeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45117F9016948BCD00448715 /* ChallengeDetailViewController.m */; };
 		45117FB316977F7D00448715 /* profileHolderImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 45117FB116977F7D00448715 /* profileHolderImg.png */; };
 		45117FB416977F7D00448715 /* profileHolderImg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45117FB216977F7D00448715 /* profileHolderImg@2x.png */; };
@@ -94,6 +100,7 @@
 		45BD9799166FE34C00C0695B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BD9798166FE34C00C0695B /* Default@2x.png */; };
 		45BD979B166FE34C00C0695B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BD979A166FE34C00C0695B /* Default-568h@2x.png */; };
 		45BD979E166FE34C00C0695B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45BD979D166FE34C00C0695B /* ViewController.m */; };
+		45C6455D16A9C1BF00F15A95 /* dropDownBGResizable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45C6455C16A9C1BF00F15A95 /* dropDownBGResizable@2x.png */; };
 		45CD020216A74456002D69E1 /* apartment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD01FE16A74456002D69E1 /* apartment@2x.png */; };
 		45CD020316A74456002D69E1 /* mens@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD01FF16A74456002D69E1 /* mens@2x.png */; };
 		45CD020416A74456002D69E1 /* sale@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD020016A74456002D69E1 /* sale@2x.png */; };
@@ -109,6 +116,12 @@
 
 /* Begin PBXFileReference section */
 		0DD7CD31E2064E308DDFEE19 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		450A647016A9BA33007FD8D0 /* check-in@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-in@2x.png"; sourceTree = "<group>"; };
+		450A647316A9BA43007FD8D0 /* gift@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gift@2x.png"; sourceTree = "<group>"; };
+		450A647516A9BA5B007FD8D0 /* myuo_id@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myuo_id@2x.png"; sourceTree = "<group>"; };
+		450A647716A9BA67007FD8D0 /* qr_scanner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qr_scanner@2x.png"; sourceTree = "<group>"; };
+		450A647916A9BA78007FD8D0 /* uochallengesu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uochallengesu@2x.png"; sourceTree = "<group>"; };
+		450A647B16A9BA83007FD8D0 /* uoleaders@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uoleaders@2x.png"; sourceTree = "<group>"; };
 		45117F8F16948BCD00448715 /* ChallengeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChallengeDetailViewController.h; sourceTree = "<group>"; };
 		45117F9016948BCD00448715 /* ChallengeDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChallengeDetailViewController.m; sourceTree = "<group>"; };
 		45117FB116977F7D00448715 /* profileHolderImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profileHolderImg.png; sourceTree = "<group>"; };
@@ -215,6 +228,7 @@
 		45BD979A166FE34C00C0695B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		45BD979C166FE34C00C0695B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		45BD979D166FE34C00C0695B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		45C6455C16A9C1BF00F15A95 /* dropDownBGResizable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropDownBGResizable@2x.png"; sourceTree = "<group>"; };
 		45CD01FE16A74456002D69E1 /* apartment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment@2x.png"; sourceTree = "<group>"; };
 		45CD01FF16A74456002D69E1 /* mens@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mens@2x.png"; sourceTree = "<group>"; };
 		45CD020016A74456002D69E1 /* sale@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sale@2x.png"; sourceTree = "<group>"; };
@@ -270,6 +284,13 @@
 		458B846B16713FF700E63FD3 /* imgs_ui */ = {
 			isa = PBXGroup;
 			children = (
+				45C6455C16A9C1BF00F15A95 /* dropDownBGResizable@2x.png */,
+				450A647016A9BA33007FD8D0 /* check-in@2x.png */,
+				450A647716A9BA67007FD8D0 /* qr_scanner@2x.png */,
+				450A647B16A9BA83007FD8D0 /* uoleaders@2x.png */,
+				450A647916A9BA78007FD8D0 /* uochallengesu@2x.png */,
+				450A647516A9BA5B007FD8D0 /* myuo_id@2x.png */,
+				450A647316A9BA43007FD8D0 /* gift@2x.png */,
 				8676143E16A8F474001B7394 /* store_locator@2x.png */,
 				8676143A16A8E734001B7394 /* music_player@2x.png */,
 				8676143C16A8EB90001B7394 /* myuo_status@2x.png */,
@@ -560,6 +581,13 @@
 				8676143B16A8E734001B7394 /* music_player@2x.png in Resources */,
 				8676143D16A8EB90001B7394 /* myuo_status@2x.png in Resources */,
 				8676143F16A8F474001B7394 /* store_locator@2x.png in Resources */,
+				450A647116A9BA33007FD8D0 /* check-in@2x.png in Resources */,
+				450A647416A9BA43007FD8D0 /* gift@2x.png in Resources */,
+				450A647616A9BA5B007FD8D0 /* myuo_id@2x.png in Resources */,
+				450A647816A9BA67007FD8D0 /* qr_scanner@2x.png in Resources */,
+				450A647A16A9BA78007FD8D0 /* uochallengesu@2x.png in Resources */,
+				450A647C16A9BA83007FD8D0 /* uoleaders@2x.png in Resources */,
+				45C6455D16A9C1BF00F15A95 /* dropDownBGResizable@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UILabel *percLabel;
 @property (nonatomic, strong) UIView *percBar;
 @property (nonatomic, strong) UIView *percBarBack;
+@property (nonatomic) BOOL built;
 
 @end
 
@@ -54,6 +55,8 @@
         UIPanGestureRecognizer *navigationBarPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self.navigationController.parentViewController action:@selector(revealGesture:)];
 		[self.navigationController.navigationBar addGestureRecognizer:navigationBarPanGestureRecognizer];
 	}
+    
+    
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
@@ -133,6 +136,8 @@
 }
 
 - (void)buildLayout {
+    self.built = YES;
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     UINavigationBar *navBar = self.navigationController.navigationBar;
@@ -258,7 +263,8 @@
         perc = section.completion * 100;
         UILabel *ruleCount = [[UILabel alloc] initWithFrame:CGRectMake(title.frame.origin.x + title.frame.size.width + 4.0, title.frame.origin.y, 0.0, 0.0)];
         ruleCount.backgroundColor = [UIColor clearColor];
-        ruleCount.textColor = [UIColor redColor];
+        if ( perc < 100 ) ruleCount.textColor = [UIColor redColor];
+        else ruleCount.textColor = [UIColor colorWithRed:0.004 green:0.682 blue:0.004 alpha:1.000];
         ruleCount.font = title.font;
         ruleCount.text = [NSString stringWithFormat:@"(%i%%)", perc];
         [ruleCount sizeToFit];
@@ -323,6 +329,8 @@
         frame.size.width = 0.0;
         frame.size.height = 0.0;
         percLabel.frame = frame;
+        if ( perc < 100 ) percLabel.textColor = [UIColor redColor];
+        else percLabel.textColor = [UIColor colorWithRed:0.004 green:0.682 blue:0.004 alpha:1.000];
         percLabel.text = [NSString stringWithFormat:@"(%i%%)", perc];
         [percLabel sizeToFit];
     }
@@ -366,6 +374,8 @@
     [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
     rightBtn.tag = 2;
     [self.navigationController.navigationBar addSubview:rightBtn];
+    
+    if ( _built ) [self refreshData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

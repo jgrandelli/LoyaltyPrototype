@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ChallengeData.h"
 
-@interface ProfileGraduateViewController : UIViewController
+@interface ProfileGraduateViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
 - (id)initWithData:(ChallengeData *)data;
 
