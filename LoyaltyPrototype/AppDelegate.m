@@ -74,16 +74,14 @@
 	NSLog(@"Failed to get token, error: %@", error);
 }
 
-/*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0];
-    localNotification.alertBody = @"Alert message goes here";
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    UIApplicationState state = [application applicationState];
+    if ( state == UIApplicationStateActive ) {
+        NSString *str = [[[userInfo objectForKey:@"aps"] objectForKey:@"alert"] uppercaseString];
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil message:str delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }
 }
-*/
 
 - (void)customizeAppearance {
     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
