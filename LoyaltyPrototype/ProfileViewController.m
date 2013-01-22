@@ -183,7 +183,7 @@
     _countLabel.textColor = [UIColor blackColor];
     _countLabel.numberOfLines = 0;
     _countLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _countLabel.font = [UIFont fontNamedLoRes15BoldOaklandWithSize:16.0];
+    _countLabel.font = [UIFont fontNamedLoRes15BoldOaklandWithSize:15.0];
     _countLabel.attributedText = attString;
     [_countLabel sizeToFit];
     [self.view addSubview:_countLabel];
