@@ -42,6 +42,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
 
     self.navBarItems = [[NavBarItemsViewController alloc] init];
+    _navBarItems.pageName = @"MYUO Status";
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];
     
@@ -116,11 +117,17 @@
     _nameLabel.text = nameLabelText;
     [_nameLabel sizeToFit];
     
-    _nextLevelLabel.frame = CGRectMake(_nextLevelLabel.frame.origin.x, _nextLevelLabel.frame.origin.y, 0.0, 0.0);
-    _nextLevelLabel.text = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    NSString *nextLevelString = nil;
+    if ( userData.percentAchieved < 1.0 ) nextLevelString = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    else nextLevelString = userData.nextLevel;
+    _nextLevelLabel.frame = CGRectMake(_nextLevelLabel.frame.origin.x, _nextLevelLabel.frame.origin.y, _progressBack.frame.size.width, 0.0);
+    _nextLevelLabel.text = nextLevelString;
+    CGRect frame = _nextLevelLabel.frame;
     [_nextLevelLabel sizeToFit];
+    frame.size.height = _nextLevelLabel.frame.size.height;
+    _nextLevelLabel.frame = frame;
 
-    CGRect frame = _progressBar.frame;
+    frame = _progressBar.frame;
     frame.size.width = _progressBack.frame.size.width * userData.percentAchieved;
     _progressBar.frame = frame;
     
@@ -231,14 +238,23 @@
     backView = [[BackgroundView alloc] initWithFrame:CGRectMake(MARGIN, yPos, totalWidth, 95.0)];
     [self.view addSubview:backView];
     
+    NSString *nextLevelString = nil;
+    if ( userData.percentAchieved < 1.0 ) nextLevelString = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    else nextLevelString = userData.nextLevel;
+    
     self.nextLevelLabel = [[UILabel alloc] initWithFrame:CGRectMake(roundf(backView.frame.origin.x + 10.0),
                                                                         roundf(backView.frame.origin.y + 10.0),
                                                                         backView.frame.size.width - 25.0, 40.0)];
     _nextLevelLabel.backgroundColor = [UIColor clearColor];
     _nextLevelLabel.font = [UIFont fontNamedLoRes15BoldOaklandWithSize:14.0];
     _nextLevelLabel.textColor = [UIColor blackColor];
-    _nextLevelLabel.text = [NSString stringWithFormat:@"Next Level: %@ %@ points", userData.nextLevel, userData.formattedNextLevelGoal];
+    _nextLevelLabel.numberOfLines = 0;
+    _nextLevelLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _nextLevelLabel.text = nextLevelString;
+    frame = _nextLevelLabel.frame;
     [_nextLevelLabel sizeToFit];
+    frame.size.height = _nextLevelLabel.frame.size.height;
+    _nextLevelLabel.frame = frame;
     [self.view addSubview:_nextLevelLabel];
     
     self.progressBack = [[UIView alloc] initWithFrame:CGRectMake(_nextLevelLabel.frame.origin.x,

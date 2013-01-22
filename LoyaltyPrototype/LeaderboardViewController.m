@@ -68,6 +68,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
     self.navBarItems = [[NavBarItemsViewController alloc] init];
+    _navBarItems.pageName = @"UOLeaders";
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [_navBarItems updateInfo];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];

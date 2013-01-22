@@ -73,10 +73,18 @@
             NSDictionary *levelDict = [[[dict objectForKey:@"users"] objectForKey:@"User"] objectForKey:@"SiteLevel"];
             self.nextLevel = [levelDict objectForKey:@"description"];
             self.nextLevelGoal = [[levelDict objectForKey:@"points"] intValue];
-            self.formattedNextLevelGoal = [self formattedPointsFromInt:_nextLevelGoal];
             self.pointsToGo = _nextLevelGoal - _points;
-            self.formattedPointsToGo = [self formattedPointsFromInt:_pointsToGo];
             self.percentAchieved = (CGFloat)(_points - _currentLevelGoal)/(_nextLevelGoal - _currentLevelGoal);
+            
+            if ( _points > _nextLevelGoal ) {
+                self.nextLevel = @"You're already an Urban Legend, what more do you want?";
+                self.nextLevelGoal = _points;
+                self.pointsToGo = 0;
+                self.percentAchieved = 1.0;
+            }
+
+            self.formattedNextLevelGoal = [self formattedPointsFromInt:_nextLevelGoal];
+            self.formattedPointsToGo = [self formattedPointsFromInt:_pointsToGo];
         }
         else if ( [[dict objectForKey:@"method"] isEqualToString:@"site.getActionFeed"] ) {
             for ( NSDictionary *feedItem in [[dict objectForKey:@"items"] objectForKey:@"entry"] ) {

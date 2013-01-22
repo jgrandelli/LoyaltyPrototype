@@ -28,7 +28,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
 
     NavBarItemsViewController *navBarItems = [[NavBarItemsViewController alloc] init];
-    navBarItems.pageType = @"shopping";
+    navBarItems.pageName = @"Urban Outfitters";
     [navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [self.navigationController.navigationBar addSubview:navBarItems.view];
     

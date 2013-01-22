@@ -10,6 +10,10 @@
 #import "UIColor+ColorConstants.h"
 #import "UIFont+UrbanAdditions.h"
 #import "BackgroundView.h"
+#import <Social/Social.h>
+#import "ViewController.h"
+#import "MenuViewController.h"
+#import "ProfileViewController.h"
 
 @interface ChallengeDetailViewController ()
 
@@ -105,10 +109,45 @@
     descriptionLabel.text = _challengeData.description;
     [descriptionLabel sizeToFit];
     [self.view addSubview:descriptionLabel];
-
-    CGRect frame = backView.frame;
-    frame.size.height = descriptionLabel.frame.size.height + (descriptionLabel.frame.origin.y - backView.frame.origin.y) + INNER_PADDING + 5.0;
+    
+    CGFloat height = descriptionLabel.frame.size.height + (descriptionLabel.frame.origin.y);
+    CGRect frame;
+    
+    NSLog(@"type = %@", _challengeData.icon);
+    
+    if ( [_challengeData.icon isEqualToString:@"twitter"] || [_challengeData.icon isEqualToString:@"profile"] ) {
+        NSString *titleText = nil;
+        if ( [_challengeData.icon isEqualToString:@"twitter"] ) titleText = @"Send Tweet";
+        else titleText = @"Go to Profile";
+            
+        UIButton *challengeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        challengeBtn.frame = CGRectMake(descriptionLabel.frame.origin.x, height + 10.0, 100.0, 34.0);
+        [challengeBtn setImage:[UIImage imageNamed:_challengeData.icon] forState:UIControlStateNormal];
+        challengeBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        challengeBtn.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        if ( [_challengeData.icon isEqualToString:@"twitter"] ) [challengeBtn addTarget:self action:@selector(tweetBtnTouched) forControlEvents:UIControlEventTouchUpInside];
+        else [challengeBtn addTarget:self action:@selector(profileBtnTouched) forControlEvents:UIControlEventTouchUpInside];
+        
+        UILabel *challengeLabel = [[UILabel alloc] initWithFrame:CGRectMake(33.0, 7.0, 0.0, 0.0)];
+        challengeLabel.backgroundColor = [UIColor clearColor];
+        challengeLabel.textColor = [UIColor blackColor];
+        challengeLabel.font = [UIFont fontNamedLoRes15BoldOaklandWithSize:18.0];
+        challengeLabel.text = titleText;
+        [challengeLabel sizeToFit];
+        
+        [challengeBtn addSubview:challengeLabel];
+        frame = challengeBtn.frame;
+        frame.size.width = 33.0 + challengeLabel.frame.size.width + 5.0;
+        challengeBtn.frame = frame;
+        [self.view addSubview:challengeBtn];
+        
+        height = challengeBtn.frame.origin.y + challengeBtn.frame.size.height;
+    }
+    
+    frame = backView.frame;
+    frame.size.height = (height - backView.frame.origin.y) + INNER_PADDING + 5.0;
     backView.frame = frame;
+    [backView setNeedsDisplay];
 
     
     backView = [[BackgroundView alloc] initWithFrame:CGRectMake(frame.origin.x, frame.origin.y + frame.size.height + 10.0, frame.size.width, self.view.frame.size.height - (frame.origin.y + frame.size.height + 20.0))];
@@ -174,10 +213,39 @@
     rulesHolder.frame = frame;
     
     backView.frame = rulesHolder.frame;
+    [backView setNeedsDisplay];
+    
     
     [rulesHolder addSubview:scrollView];
 
     [rulesHolder addSubview:blackLine];
+}
+
+- (void)tweetBtnTouched {
+    
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [tweetSheet setInitialText:@"Check out what I just got at Urban Outfitters #MYUOBUY. "];
+        [self presentViewController:tweetSheet animated:YES completion:nil];
+    }
+    else {
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Sorry"
+                                  message:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup"
+                                  delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)profileBtnTouched {
+    ViewController *revealController = (ViewController *)self.navigationController.parentViewController;
+    MenuViewController *menu = (MenuViewController *)revealController.rearViewController;
+    [menu swapFrontView];
+    //ProfileViewController *profileVC = [[ProfileViewController alloc] init];
+   //UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
+   //[revealController setFrontViewController:navigationController animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

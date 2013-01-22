@@ -21,6 +21,8 @@
     NSArray *tableArray;
 }
 
+@property (nonatomic, strong) UITableView *menu;
+
 @end
 
 @implementation MenuViewController
@@ -29,21 +31,21 @@
     [super viewDidLoad];
     
     NSArray *shoppingArray = [NSArray arrayWithObjects:@"Womens", @"Mens", @"Apartment", @"Gift", @"Sale", nil];
-    NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", @"Check-In", @"QR Scanner", nil];
+    NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", nil];
     NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"MYUO Profile", @"MYUO ID", @"UOChallengesU", @"UOLeaders", nil];
     
     tableArray = [NSArray arrayWithObjects:shoppingArray, appsArray, loyaltyArray, nil];
     
-    UITableView *menu = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    menu.dataSource = self;
-    menu.delegate = self;
-    menu.rowHeight = 34.0;
-    menu.backgroundColor = [UIColor offWhite];
-    [menu setSeparatorColor:[UIColor blackColor]];
-    [menu setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    [self.view addSubview:menu];
+    self.menu = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    _menu.dataSource = self;
+    _menu.delegate = self;
+    _menu.rowHeight = 34.0;
+    _menu.backgroundColor = [UIColor offWhite];
+    [_menu setSeparatorColor:[UIColor blackColor]];
+    [_menu setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    [self.view addSubview:_menu];
     
-    [menu setAllowsSelection:YES];
+    [_menu setAllowsSelection:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -128,11 +130,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"index path = %@", indexPath);
+    
     ViewController *revealController = [self.parentViewController isKindOfClass:[ViewController class]] ? (ViewController *)self.parentViewController : nil;
     
     NSString *selection = [[tableArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
-//    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"MYUO Profile", @"MYUO ID", @"UOChallengesU", @"UOLeaders", nil];
     if ( indexPath.section == 0 ) {
         ShopPageViewController *shoppingVC = nil;
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ShopPageViewController class]] ) {
@@ -177,6 +180,21 @@
     else {
         //[revealController revealToggle:self];
     }
+}
+
+- (void)swapFrontView {
+    NSIndexPath *ind = [NSIndexPath indexPathForRow:1 inSection:2];
+    UITableViewCell *cell = [_menu cellForRowAtIndexPath:ind];
+    [cell setSelected:YES];
+    
+    ind = [NSIndexPath indexPathForRow:3 inSection:2];
+    cell = [_menu cellForRowAtIndexPath:ind];
+    [cell setSelected:NO];
+    
+    ProfileViewController *profileVC = [[ProfileViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
+    ViewController *revealController = (ViewController *)self.parentViewController;
+    [revealController setFrontViewController:navigationController animated:NO];
 }
 
 - (void)loadNewFrontviewWithViewController:(UIViewController *)frontVC {

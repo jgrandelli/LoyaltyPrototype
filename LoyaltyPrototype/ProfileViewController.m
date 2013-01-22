@@ -16,6 +16,7 @@
 #import "ChallengeData.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ProfileGraduateViewController.h"
+#import "ProfileShareViewController.h"
 
 @interface ProfileViewController ()
 
@@ -46,6 +47,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
     self.navBarItems = [[NavBarItemsViewController alloc] init];
+    _navBarItems.pageName = @"MYUO Profile";
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];
     
@@ -345,8 +347,10 @@
         case 101:
             NSLog(@"");
             break;
-        case 102:
-            NSLog(@"");
+        case 102: {
+                ProfileShareViewController *shareController = [[ProfileShareViewController alloc] initWithData:data];
+                [self.navigationController pushViewController:shareController animated:YES];
+            }
             break;
         case 103: {
                 ProfileGraduateViewController *gradController = [[ProfileGraduateViewController alloc] initWithData:data];

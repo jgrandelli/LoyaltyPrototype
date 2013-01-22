@@ -61,6 +61,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
 
     self.navBarItems = [[NavBarItemsViewController alloc] init];
+    _navBarItems.pageName = @"UOChallengesU";
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [_navBarItems updateInfo];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];
@@ -322,6 +323,7 @@
     CGRect frame = backView.frame;
     frame.size.height = descriptionLabel.frame.origin.y + descriptionLabel.frame.size.height + VERT_MARGIN;
     backView.frame = frame;
+    [backView setNeedsDisplay];
     
 	return cell;
 }

@@ -436,6 +436,7 @@
 }
 
 - (void)submitInfo {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSArray *varArray = @[@"graduate%5Fin%5Fcollege", @"graduate%5Fgrad%5Fdate", @"graduate%5Fmy%5Fschool", @"graduate%5Fhousing"];
 
     NSMutableArray *opArray = [[NSMutableArray alloc] init];
@@ -461,7 +462,13 @@
                                       nil;
                                   }
                                 completionBlock:^(NSArray *operations) {
+                                    [self infoSubmitted];
                                 }];
+}
+
+- (void)infoSubmitted {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)collegeRadioSelected:(id)sender {

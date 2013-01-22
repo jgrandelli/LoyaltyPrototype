@@ -34,78 +34,24 @@
     
     CGRect frame;
     
-    if ( ![_pageType isEqualToString:@"shopping"] ) {
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 4.0, self.view.bounds.size.width, 0.0)];
-        _nameLabel.textColor = [UIColor blackColor];
-        _nameLabel.backgroundColor = [UIColor whiteColor];
-        _nameLabel.textAlignment = NSTextAlignmentCenter;
-        _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:16];
-        frame = _nameLabel.frame;
-        _nameLabel.text = @"";
-        [_nameLabel sizeToFit];
-        [self.view addSubview:_nameLabel];
-        
-        self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, frame.origin.y + frame.size.height, self.view.bounds.size.width, 0.0)];
-        _statusLabel.textColor = [UIColor blackColor];
-        _statusLabel.backgroundColor = [UIColor whiteColor];
-        _statusLabel.textAlignment = NSTextAlignmentCenter;
-        _statusLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:12.0];
-        frame = _statusLabel.frame;
-        _statusLabel.text = @"";
-        [_statusLabel sizeToFit];
-        [self.view addSubview:_statusLabel];
-        
-        //*
-        self.progressBack = [[UIView alloc] initWithFrame:CGRectMake(0.0, 40.0, self.view.frame.size.width, 4.0)];
-        _progressBack.backgroundColor = [UIColor blackColor];
-        [self.view addSubview:_progressBack];
-        
-        self.progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, _progressBack.frame.origin.y, 0.0, 4.0)];
-        _progressBar.backgroundColor = [UIColor redColor];
-        [self.view addSubview:_progressBar];
-    }
-    else {
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 7.0, self.view.bounds.size.width, 0.0)];
-        _nameLabel.textColor = [UIColor blackColor];
-        _nameLabel.backgroundColor = [UIColor whiteColor];
-        _nameLabel.textAlignment = NSTextAlignmentCenter;
-        _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:20];
-        _nameLabel.text = @"Urban Outfitters";
-        [_nameLabel sizeToFit];
-        frame = _nameLabel.frame;
-        frame.size.width = _nameLabel.frame.size.width + 10.0;
-        frame.size.height = _nameLabel.frame.size.height + 4.0;
-        frame.origin.x = roundf(self.view.frame.size.width*.5 - frame.size.width*.5);
-        _nameLabel.frame = frame;
-        [self.view addSubview:_nameLabel];
-    }
+    self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 11.0, self.view.bounds.size.width, 0.0)];
+    _nameLabel.textColor = [UIColor blackColor];
+    _nameLabel.backgroundColor = [UIColor clearColor];
+    _nameLabel.textAlignment = NSTextAlignmentCenter;
+    _nameLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:18];
+    _nameLabel.text = _pageName;
+    [_nameLabel sizeToFit];
+    frame = _nameLabel.frame;
+    frame.origin.x = roundf(self.view.frame.size.width*.5 - frame.size.width*.5);
+    _nameLabel.frame = frame;
+    [self.view addSubview:_nameLabel];
     
+    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(_nameLabel.frame.origin.x - 8.0, _nameLabel.frame.origin.y - 4.0, _nameLabel.frame.size.width + 16.0, _nameLabel.frame.size.height + 8.0)];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.view insertSubview:backView belowSubview:_nameLabel];
 }
 
 - (void)updateInfo {
-    UserData *userData = [UserData sharedInstance];
-    
-    CGRect frame;
-    _nameLabel.frame = CGRectMake(0.0, 4.0, self.view.bounds.size.width, 0.0);
-    _nameLabel.text = [userData.handle uppercaseString];
-    [_nameLabel sizeToFit];
-    frame = _nameLabel.frame;
-    frame.size.width = _nameLabel.frame.size.width + 10.0;
-    frame.origin.x = roundf(self.view.frame.size.width*.5 - frame.size.width*.5);
-    _nameLabel.frame = frame;
-    
-    _statusLabel.frame = CGRectMake(0.0, frame.origin.y + frame.size.height + 2.0, self.view.bounds.size.width, 0.0);
-    _statusLabel.text = [NSString stringWithFormat:@"%@: %@ points", userData.currentLevel, userData.formattedPoints];
-    [_statusLabel sizeToFit];
-    frame = _statusLabel.frame;
-    frame.size.width = _statusLabel.frame.size.width + 10.0;
-    frame.origin.x = roundf(self.view.frame.size.width*.5 - frame.size.width*.5);
-    _statusLabel.frame = frame;
-    
-    CGFloat progressWidth = _progressBack.frame.size.width * userData.percentAchieved;
-    frame = _progressBar.frame;
-    frame.size.width = progressWidth;
-    _progressBar.frame = frame;
 }
 
 - (void)didReceiveMemoryWarning {

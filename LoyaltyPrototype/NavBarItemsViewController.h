@@ -10,7 +10,7 @@
 
 @interface NavBarItemsViewController : UIViewController
 
-@property (nonatomic, strong) NSString *pageType;
+@property (nonatomic, strong) NSString *pageName;
 
 - (void)updateInfo;
 

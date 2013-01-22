@@ -15,6 +15,7 @@
 #import "NavBarItemsViewController.h"
 #import "ShopPageViewController.h"
 #import "UserData.h"
+#import <TTSwitch.h>
 
 @implementation AppDelegate
 
@@ -25,6 +26,16 @@
     
     [[UserData sharedInstance] retrieveInitialSessionKey];
 
+    [[TTSwitch appearance] setTrackImage:[UIImage imageNamed:@"switch-track"]];
+    [[TTSwitch appearance] setOverlayImage:[UIImage imageNamed:@"switch-overlay"]];
+    [[TTSwitch appearance] setTrackMaskImage:[UIImage imageNamed:@"switch-mask"]];
+    [[TTSwitch appearance] setThumbImage:[UIImage imageNamed:@"switch-thumb"]];
+    [[TTSwitch appearance] setThumbHighlightImage:[UIImage imageNamed:@"switch-thumb-highlight"]];
+    [[TTSwitch appearance] setThumbMaskImage:[UIImage imageNamed:@"switch-mask"]];
+    [[TTSwitch appearance] setThumbInsetX:-3.0f];
+    [[TTSwitch appearance] setThumbOffsetY:-3.0f];
+    
+    
     // Let the device know we want to receive push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];

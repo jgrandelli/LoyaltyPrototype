@@ -10,4 +10,6 @@
 
 @interface MenuViewController:UIViewController <UITableViewDelegate, UITableViewDataSource>
 
+- (void)swapFrontView;
+
 @end
