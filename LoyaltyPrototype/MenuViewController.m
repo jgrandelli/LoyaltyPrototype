@@ -16,6 +16,7 @@
 #import "UIFont+UrbanAdditions.h"
 #import "ShopPageViewController.h"
 #import "ProfileViewController.h"
+#import "IDViewController.h"
 
 @interface MenuViewController () {
     NSArray *tableArray;
@@ -130,8 +131,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"index path = %@", indexPath);
-    
     ViewController *revealController = [self.parentViewController isKindOfClass:[ViewController class]] ? (ViewController *)self.parentViewController : nil;
     
     NSString *selection = [[tableArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -160,6 +159,13 @@
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ProfileViewController class]] ) {
             ProfileViewController *profileVC = [[ProfileViewController alloc] init];
             [self loadNewFrontviewWithViewController:profileVC];
+        }
+        else [revealController revealToggle:self];
+    }
+    else if ( [selection isEqualToString:@"MYUO ID"] ) {
+        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[IDViewController class]] ) {
+            IDViewController *idVC = [[IDViewController alloc] init];
+            [self loadNewFrontviewWithViewController:idVC];
         }
         else [revealController revealToggle:self];
     }

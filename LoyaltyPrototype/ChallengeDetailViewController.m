@@ -113,8 +113,6 @@
     CGFloat height = descriptionLabel.frame.size.height + (descriptionLabel.frame.origin.y);
     CGRect frame;
     
-    NSLog(@"type = %@", _challengeData.icon);
-    
     if ( [_challengeData.icon isEqualToString:@"twitter"] || [_challengeData.icon isEqualToString:@"profile"] ) {
         NSString *titleText = nil;
         if ( [_challengeData.icon isEqualToString:@"twitter"] ) titleText = @"Send Tweet";
