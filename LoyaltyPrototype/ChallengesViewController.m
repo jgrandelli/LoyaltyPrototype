@@ -26,6 +26,7 @@
 @property (nonatomic, weak) NSMutableArray *selectedArray;
 @property (nonatomic, strong) NavBarItemsViewController *navBarItems;
 @property (nonatomic) int currentSelection;
+@property (nonatomic) BOOL built;
 
 @end
 
@@ -149,6 +150,8 @@
     [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
     rightBtn.tag = 2;
     [self.navigationController.navigationBar addSubview:rightBtn];
+
+    if ( _built ) [self refreshData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -211,6 +214,8 @@
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    self.built = YES;
     
     [_tableView reloadData];
 }

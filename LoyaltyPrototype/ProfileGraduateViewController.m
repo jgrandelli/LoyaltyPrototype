@@ -474,7 +474,6 @@
 - (void)collegeRadioSelected:(id)sender {
     if ( [sender tag] == 10 ) {
         _collegeYesBtn.selected = YES;
-        
         UILabel *label = (UILabel *)[_collegeYesBtn viewWithTag:11];
         label.textColor = [UIColor blueColor];
         
