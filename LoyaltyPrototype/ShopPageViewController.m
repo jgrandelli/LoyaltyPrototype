@@ -51,7 +51,7 @@
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     rightBtn.frame = CGRectMake(self.view.frame.size.width - rightImg.size.width - 10.0, 5.0, rightImg.size.width, rightImg.size.height);
     [rightBtn setImage:rightImg forState:UIControlStateNormal];
-    [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
+    //[rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationController.navigationBar addSubview:rightBtn];
 
     
