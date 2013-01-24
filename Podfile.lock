@@ -1,23 +1,26 @@
 
+COCOAPODS: 0.16.0
+
 SPEC CHECKSUMS: 
-  MBProgressHUD: b23ee11c42253d6d804e8e0bfabdc334e8b2571f
   TTSwitch: c680eac7af32f944d569c868cf4001af27ed6f0f
-  CrittercismSDK: b1bc7bd00979398e15c7ab5d6291c047aa182035
+  Facebook-iOS-SDK: 5fc068ebfd8c8c9b0fad476bc36dbbf1fffeebc8
+  CrittercismSDK: eabc672ff1a310f19c4635b65a18e044e635a42a
   ZUUIRevealController: ab8e1f25e000357ec7fd1be64ba7c3c4fbc1257c
   AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
+  MBProgressHUD: b23ee11c42253d6d804e8e0bfabdc334e8b2571f
 
 DEPENDENCIES: 
 - AFNetworking
 - CrittercismSDK
+- Facebook-iOS-SDK (~> 3.1.1)
 - MBProgressHUD
 - TTSwitch (~> 0.0.1)
 - ZUUIRevealController
 
 PODS: 
 - AFNetworking (1.1.0)
-- CrittercismSDK (3.4.8)
+- CrittercismSDK (3.4.9)
+- Facebook-iOS-SDK (3.1.1)
 - MBProgressHUD (0.5)
 - TTSwitch (0.0.2)
 - ZUUIRevealController (0.9.6)
-
-COCOAPODS: 0.16.0
