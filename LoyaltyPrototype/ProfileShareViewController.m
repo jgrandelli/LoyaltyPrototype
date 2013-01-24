@@ -32,7 +32,9 @@
 
 #define MARGIN 15.0f
 #define PADDING 10.0f
-#define BASE_URL @"https://sandbox.bunchball.net/nitro/json?value=0&method=user%2ElogAction&metadata=&competitionInstanceId=&newsfeed=&target=&tags=sharewithus_twitter&userId=16&asyncToken=&storeResponse=false"
+#define BASE_URL @"https://sandbox.bunchball.net/nitro/json?value=0&method=user%2ElogAction&metadata=&competitionInstanceId=&newsfeed=&target=&userId=16&asyncToken=&storeResponse=false"
+#define TWITTER_TAG @"&tags=sharewithus_twitter"
+#define FACEBOOK_TAG @"&tags=sharewithus_facebook"
 
 - (id)initWithData:(ChallengeData *)data {
 	self = [super init];
@@ -120,8 +122,7 @@
         
         TTSwitch *defaultSwitch = [[TTSwitch alloc] initWithFrame:CGRectMake(backView.frame.size.width - 76.0 - 8.0 - PADDING, PADDING, 76.0, 27.0)];
         defaultSwitch.tag = 10 + i;
-        if ( i == 0 ) [defaultSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-        //defaultSwitch
+        if ( i == 0 || i == 1 ) [defaultSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
         [backView addSubview:defaultSwitch];
         
         CGRect frame = backView.frame;
@@ -136,51 +137,44 @@
 - (void)switchChanged:(id)sender {
     TTSwitch *defaultSwitch = (TTSwitch *)sender;
     if ( [defaultSwitch isOn] ) {
-
-        if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        NSString *serviceType = SLServiceTypeTwitter;
+        NSString *accountID = ACAccountTypeIdentifierTwitter;
+        NSDictionary *options = nil;
+        if ( [sender tag] == 11 ) {
+            serviceType = SLServiceTypeFacebook;
+            accountID = ACAccountTypeIdentifierFacebook;
+            options = @{@"ACFacebookAppIdKey" : @"471885202859476", @"ACFacebookPermissionsKey" : @[@"publish_actions"], @"ACFacebookAudienceKey" : ACFacebookAudienceFriends};
+        }
+        
+        if ([SLComposeViewController isAvailableForServiceType:serviceType]) {
             ACAccountStore *account = [[ACAccountStore alloc] init];
-            ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+            ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:accountID];
             
-            [account requestAccessToAccountsWithType:accountType options:nil
+            [account requestAccessToAccountsWithType:accountType
+                                             options:options
                                           completion:^(BOOL granted, NSError *error) {
                                               if (granted == YES) {
-                                                  // Get account and communicate with Twitter API
-                                                  //NSLog(@"%d --- %@", granted, accountType);
-                                                  //NSArray *arrayOfAccounts = [account accountsWithAccountType:accountType];
-                                                  //NSLog(@"array of accounts = %@", arrayOfAccounts);
-                                                  
-                                                  //[self sendCompletion];
+                                                  [self sendCompletionWithID:accountID];
                                               }
             }];
         }
     }
-
-    [self sendCompletion];
 }
 
-- (void)sendCompletion {
-    NSString *urlString = [NSString stringWithFormat:@"%@&sessionKey=%@", BASE_URL, [[UserData sharedInstance] sessionKey]];
+- (void)sendCompletionWithID:(NSString *)accountID {
+    NSString *tag = TWITTER_TAG;
+    if ( [accountID isEqualToString:ACAccountTypeIdentifierFacebook] ) tag = FACEBOOK_TAG;
+    NSString *urlString = [NSString stringWithFormat:@"%@%@&sessionKey=%@", BASE_URL, tag, [[UserData sharedInstance] sessionKey]];
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:req
                                                                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                                                                     [self completionSubmitted];
-                                                                                     NSLog(@"json = %@", JSON);
                                                                                  }
                                                                                  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                                                     NSLog(@"FAILURES~!!!!!");
-                                                                                     NSLog(@"response = %@\n\n", response);
-                                                                                     NSLog(@"error = %@", error);
                                                                                  }];
     
     [op start];
 }
-
-- (void)completionSubmitted {
-//    [self.navigationController popViewControllerAnimated:YES];
-}
-
-
 
 - (void)backBtnPressed:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

@@ -275,8 +275,8 @@
         
         [self.view addSubview:sectionBtn];
         
-        UIImageView *arrowImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
-        arrowImg.frame = CGRectMake(sectionBtn.frame.size.width - PADDING - 5.0 - 24.0, 12.0, 20.0, 15.0);
+        UIImageView *arrowImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow_right"]];
+        arrowImg.frame = CGRectMake(sectionBtn.frame.size.width - 28.0, 14.0, 10.0, 10.0);
         [sectionBtn addSubview:arrowImg];
         
         sectionBtn.tag = ind;

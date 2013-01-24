@@ -17,6 +17,7 @@
 #import "ShopPageViewController.h"
 #import "ProfileViewController.h"
 #import "IDViewController.h"
+#import "CheckInViewController.h"
 
 @interface MenuViewController () {
     NSArray *tableArray;
@@ -32,7 +33,7 @@
     [super viewDidLoad];
     
     NSArray *shoppingArray = [NSArray arrayWithObjects:@"Womens", @"Mens", @"Apartment", @"Gift", @"Sale", nil];
-    NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", nil];
+    NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", @"Check-In", nil];
     NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"MYUO Profile", @"MYUO ID", @"UOChallengesU", @"UOLeaders", nil];
     
     tableArray = [NSArray arrayWithObjects:shoppingArray, appsArray, loyaltyArray, nil];
@@ -135,6 +136,9 @@
     
     NSString *selection = [[tableArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:NO];
+    
     if ( indexPath.section == 0 ) {
         ShopPageViewController *shoppingVC = nil;
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ShopPageViewController class]] ) {
@@ -148,7 +152,14 @@
             [shoppingVC updateViewWithTitle:selection];
         }
     }
-    if ( [selection isEqualToString:@"MYUO Status"] ) {
+    else if ( [selection isEqualToString:@"Check-In"] ) {
+        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[CheckInViewController class]] ) {
+            CheckInViewController *checkinVC = [[CheckInViewController alloc] init];
+            [self loadNewFrontviewWithViewController:checkinVC];
+        }
+        else [revealController revealToggle:self];
+    }
+    else if ( [selection isEqualToString:@"MYUO Status"] ) {
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[StatusViewController class]] ) {
             StatusViewController *statusVC = [[StatusViewController alloc] init];
             [self loadNewFrontviewWithViewController:statusVC];
@@ -189,14 +200,6 @@
 }
 
 - (void)swapFrontView {
-    NSIndexPath *ind = [NSIndexPath indexPathForRow:1 inSection:2];
-    UITableViewCell *cell = [_menu cellForRowAtIndexPath:ind];
-    [cell setSelected:YES];
-    
-    ind = [NSIndexPath indexPathForRow:3 inSection:2];
-    cell = [_menu cellForRowAtIndexPath:ind];
-    [cell setSelected:NO];
-    
     ProfileViewController *profileVC = [[ProfileViewController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
     ViewController *revealController = (ViewController *)self.parentViewController;

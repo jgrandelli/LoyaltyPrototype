@@ -373,11 +373,11 @@
 
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     submitBtn.frame = CGRectMake(MARGIN, frame.origin.y + frame.size.height + 10.0, totalWidth, 44.0);
-    backView = [[BackgroundView alloc] initWithFrame:CGRectMake(0, 0, totalWidth, 44.0)];
+    backView = [[BackgroundView alloc] initWithFrame:CGRectMake(0, 0, totalWidth, 44.0) color:[UIColor blueColor]];
     backView.userInteractionEnabled = NO;
     [submitBtn addSubview:backView];
     UILabel *submitLabel = [[UILabel alloc] initWithFrame:CGRectMake(3.0, 3.0, backView.frame.size.width - 11.0, backView.frame.size.height -11.0)];
-    submitLabel.backgroundColor = [UIColor blueColor];
+    submitLabel.backgroundColor = [UIColor clearColor];
     submitLabel.textColor = [UIColor whiteColor];
     submitLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:18.0];
     submitLabel.textAlignment = NSTextAlignmentCenter;

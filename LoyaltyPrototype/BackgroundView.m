@@ -10,17 +10,34 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 
+@interface BackgroundView()
+
+@property (nonatomic, strong) UIColor *color;
+
+@end
+
 @implementation BackgroundView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
+        self.color = [UIColor colorWithWhite:1.0 alpha:1.0];
     }
     return self;
 }
+
+- (id)initWithFrame:(CGRect)frame color:(UIColor *)color {
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        self.backgroundColor = [UIColor clearColor];
+        self.color = color;
+    }
+    return self;
+}
+
 
 - (void)drawRect:(CGRect)rect {
     // Drawing code
@@ -34,7 +51,7 @@
     CGContextSetFillColorWithColor(context, [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0].CGColor);
     CGContextFillRect(context, bottomRect);
 
-    CGContextSetFillColorWithColor(context, [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor);
+    CGContextSetFillColorWithColor(context, _color.CGColor);
     CGContextFillRect(context, topRect);
     
     CGRect strokeRect = CGRectInset(topRect, 1.0, 1.0);

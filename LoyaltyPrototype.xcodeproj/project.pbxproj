@@ -118,6 +118,9 @@
 		45CFFB2916AF227700D3170D /* myuoid_hamburger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CFFB2516AF227700D3170D /* myuoid_hamburger@2x.png */; };
 		45CFFB2A16AF227700D3170D /* myuoid_lips@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CFFB2616AF227700D3170D /* myuoid_lips@2x.png */; };
 		45CFFB2B16AF227700D3170D /* myuoid_skull@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CFFB2716AF227700D3170D /* myuoid_skull@2x.png */; };
+		45CFFB3516B089FE00D3170D /* CheckInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CFFB3416B089FD00D3170D /* CheckInViewController.m */; };
+		45CFFB3716B1B2CE00D3170D /* foursquare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CFFB3616B1B2CE00D3170D /* foursquare@2x.png */; };
+		45CFFB3916B1B98600D3170D /* arrow_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CFFB3816B1B98600D3170D /* arrow_right@2x.png */; };
 		8676143316A8E4B7001B7394 /* radioBtn-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8676143116A8E4B7001B7394 /* radioBtn-selected@2x.png */; };
 		8676143416A8E4B7001B7394 /* radioBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8676143216A8E4B7001B7394 /* radioBtn@2x.png */; };
 		8676143916A8E714001B7394 /* myuo_profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8676143716A8E714001B7394 /* myuo_profile@2x.png */; };
@@ -261,6 +264,10 @@
 		45CFFB2516AF227700D3170D /* myuoid_hamburger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myuoid_hamburger@2x.png"; sourceTree = "<group>"; };
 		45CFFB2616AF227700D3170D /* myuoid_lips@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myuoid_lips@2x.png"; sourceTree = "<group>"; };
 		45CFFB2716AF227700D3170D /* myuoid_skull@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myuoid_skull@2x.png"; sourceTree = "<group>"; };
+		45CFFB3316B089FD00D3170D /* CheckInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckInViewController.h; sourceTree = "<group>"; };
+		45CFFB3416B089FD00D3170D /* CheckInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckInViewController.m; sourceTree = "<group>"; };
+		45CFFB3616B1B2CE00D3170D /* foursquare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare@2x.png"; sourceTree = "<group>"; };
+		45CFFB3816B1B98600D3170D /* arrow_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_right@2x.png"; sourceTree = "<group>"; };
 		8676143116A8E4B7001B7394 /* radioBtn-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radioBtn-selected@2x.png"; sourceTree = "<group>"; };
 		8676143216A8E4B7001B7394 /* radioBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radioBtn@2x.png"; sourceTree = "<group>"; };
 		8676143716A8E714001B7394 /* myuo_profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myuo_profile@2x.png"; sourceTree = "<group>"; };
@@ -314,6 +321,8 @@
 		458B846B16713FF700E63FD3 /* imgs_ui */ = {
 			isa = PBXGroup;
 			children = (
+				45CFFB3816B1B98600D3170D /* arrow_right@2x.png */,
+				45CFFB3616B1B2CE00D3170D /* foursquare@2x.png */,
 				45CFFB2416AF227700D3170D /* myuoid_alien@2x.png */,
 				45CFFB2516AF227700D3170D /* myuoid_hamburger@2x.png */,
 				45CFFB2616AF227700D3170D /* myuoid_lips@2x.png */,
@@ -454,6 +463,8 @@
 				458B8443166FEF2600E63FD3 /* MenuViewController.m */,
 				4575AB9016A74CD7009A24B8 /* ShopPageViewController.h */,
 				4575AB9116A74CD7009A24B8 /* ShopPageViewController.m */,
+				45CFFB3316B089FD00D3170D /* CheckInViewController.h */,
+				45CFFB3416B089FD00D3170D /* CheckInViewController.m */,
 				458B844C1671010400E63FD3 /* StatusViewController.h */,
 				458B844D1671010400E63FD3 /* StatusViewController.m */,
 				4575ABB116A83649009A24B8 /* ProfileViewController.h */,
@@ -642,6 +653,8 @@
 				45CFFB2916AF227700D3170D /* myuoid_hamburger@2x.png in Resources */,
 				45CFFB2A16AF227700D3170D /* myuoid_lips@2x.png in Resources */,
 				45CFFB2B16AF227700D3170D /* myuoid_skull@2x.png in Resources */,
+				45CFFB3716B1B2CE00D3170D /* foursquare@2x.png in Resources */,
+				45CFFB3916B1B98600D3170D /* arrow_right@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +701,7 @@
 				4575ABCB16A89A0F009A24B8 /* ProfileGraduateViewController.m in Sources */,
 				45CFFAE816AD94EF00D3170D /* ProfileShareViewController.m in Sources */,
 				45CFFB1B16AF1F3100D3170D /* IDViewController.m in Sources */,
+				45CFFB3516B089FE00D3170D /* CheckInViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
