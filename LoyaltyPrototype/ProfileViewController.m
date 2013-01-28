@@ -348,13 +348,13 @@
             NSLog(@"");
             break;
         case 102: {
-                ProfileShareViewController *shareController = [[ProfileShareViewController alloc] initWithData:data];
-                [self.navigationController pushViewController:shareController animated:YES];
+                ProfileGraduateViewController *gradController = [[ProfileGraduateViewController alloc] initWithData:data];
+                [self.navigationController pushViewController:gradController animated:YES];
             }
             break;
         case 103: {
-                ProfileGraduateViewController *gradController = [[ProfileGraduateViewController alloc] initWithData:data];
-                [self.navigationController pushViewController:gradController animated:YES];
+                ProfileShareViewController *shareController = [[ProfileShareViewController alloc] initWithData:data];
+                [self.navigationController pushViewController:shareController animated:YES];
             }
             break;
     }

@@ -42,9 +42,9 @@
     
     //CGFloat totalWidth = self.view.frame.size.width - MARGIN*2;
     self.venueTable = [[UITableView alloc] initWithFrame:CGRectMake(0.0,
-                                                                           self.navigationController.navigationBar.frame.size.height,
-                                                                           self.view.frame.size.width,
-                                                                           self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)];
+                                                                    self.navigationController.navigationBar.frame.size.height,
+                                                                    self.view.frame.size.width,
+                                                                    self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)];
     _venueTable.rowHeight = 54.0;
     _venueTable.dataSource = self;
     _venueTable.delegate = self;
@@ -62,6 +62,14 @@
     leftButton.tag = 1;
     [self.navigationController.navigationBar addSubview:leftButton];
 
+    UIImage *rightImg = [UIImage imageNamed:@"refreshBtn"];
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(self.view.frame.size.width - rightImg.size.width - 10.0, 5.0, rightImg.size.width, rightImg.size.height);
+    [rightBtn setImage:rightImg forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
+    rightBtn.tag = 2;
+    [self.navigationController.navigationBar addSubview:rightBtn];
+
     self.locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -72,6 +80,11 @@
     [super viewWillDisappear:animated];
     UIButton *btn = (UIButton *)[self.navigationController.navigationBar viewWithTag:1];
     [btn removeFromSuperview];
+    
+    btn = (UIButton *)[self.navigationController.navigationBar viewWithTag:2];
+    [btn removeFromSuperview];
+
+    [self stopUpdatingLocation:@"found"];
 }
 
 - (void)backBtnPressed:(id)sender {
@@ -80,7 +93,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     self.location = _locationManager.location;
-    [self stopUpdatingLocation:@"found"];
+    //[self stopUpdatingLocation:@"found"];
     [self getVenues];
 }
 
@@ -93,6 +106,10 @@
 - (void)stopUpdatingLocation:(NSString *)state {
     [_locationManager stopUpdatingLocation];
     _locationManager.delegate = nil;
+}
+
+- (void)refreshData {
+    [self getVenues];
 }
 
 - (void)getVenues {
@@ -237,6 +254,8 @@
     NSArray *vcs = [NSArray arrayWithArray:self.navigationController.viewControllers];
     CheckInViewController *checkinVC = [vcs objectAtIndex:0];
     checkinVC.venueData = venueInfo;
+    
+    ///NSLog(@"venue data = %@", venueInfo);
     
     [self.navigationController popViewControllerAnimated:YES];
 }
