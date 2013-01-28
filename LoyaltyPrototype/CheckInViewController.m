@@ -15,12 +15,26 @@
 #import "UserData.h"
 #import "VenueListViewController.h"
 
+#import <Social/Social.h>
+#import <Accounts/ACAccountType.h>
+#import <Accounts/ACAccountCredential.h>
+#import <Accounts/ACAccountStore.h>
+
+#import <FacebookSDK/FacebookSDK.h>
+#import <Twitter/Twitter.h>
+
+#import "AppDelegate.h"
+
 @interface CheckInViewController ()
 
 @property (nonatomic, strong) UIButton *checkinBtn;
 @property (nonatomic, strong) UITextField *messageTextField;
 @property (nonatomic, strong) UIButton *fbButton;
 @property (nonatomic, strong) UIButton *twButton;
+
+@property (strong, nonatomic) ACAccountStore *accountStore;
+@property (strong, nonatomic) ACAccount *facebookAccount;
+@property (strong, nonatomic) NSMutableDictionary *postParams;
 
 @end
 
@@ -129,9 +143,14 @@
     [submitBtn addTarget:self action:@selector(submitBtnPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:submitBtn];
     
-    BackgroundView *submitBox = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 0.0, submitBtn.frame.size.width, submitBtn.frame.size.height) color:[UIColor blueColor]];
-    submitBox.userInteractionEnabled = NO;
+    BackgroundView *submitOver = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 0.0, submitBtn.frame.size.width, submitBtn.frame.size.height) color:[UIColor grayColor] borderColor:[UIColor grayColor]];
+    submitOver.userInteractionEnabled = NO;
+    [submitBtn addSubview:submitOver];
+
+    BackgroundView *submitBox = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 0.0, submitBtn.frame.size.width, submitBtn.frame.size.height) color:[UIColor blueColor] borderColor:[UIColor blackColor]];
+    submitBox.tag = 1000;
     [submitBtn addSubview:submitBox];
+    
     
     UILabel *submitLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, submitBox.frame.size.width - 5.0, submitBox.frame.size.height - 5.0)];
     submitLabel.backgroundColor = [UIColor clearColor];
@@ -140,8 +159,7 @@
     submitLabel.textAlignment = NSTextAlignmentCenter;
     submitLabel.text = @"SUBMIT";
     [submitBtn addSubview:submitLabel];
-    
-    
+
     if ( [CLLocationManager locationServicesEnabled] == NO) {
         UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled" message:@"You currently have all location services for this device disabled. If you proceed, you will be asked to confirm whether location services should be reenabled." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [servicesDisabledAlert show];
@@ -151,6 +169,20 @@
 - (void)shareBtnTouched:(id)sender {
     UIButton *btn = sender;
     btn.selected = !btn.selected;
+    
+    if ( _fbButton.selected ) {
+        [self checkFacebook];
+    }
+}
+
+- (void)checkFacebook {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    if ( !FBSession.activeSession.isOpen ) {
+        [appDelegate openSessionWithAllowLoginUI:YES];
+    }
+    else {
+        NSLog(@"session is already open!");
+    }
 }
 
 #pragma mark UITextFieldDelegate Methods
@@ -182,6 +214,8 @@
     leftButton.tag = 1;
     [self.navigationController.navigationBar addSubview:leftButton];
     
+    BackgroundView *submitBox = (BackgroundView *)[self.view viewWithTag:1000];
+    
     if ( _venueData ) {
         UIImageView *iconImg = (UIImageView *)[self.view viewWithTag:10];
         [iconImg setImage:[UIImage imageNamed:@"store_locator"]];
@@ -192,6 +226,13 @@
         frame.size.width = (self.view.frame.size.width - MARGIN*2) - btnLabel.frame.origin.x - PADDING - 25.0;
         btnLabel.frame = frame;
         btnLabel.text = [_venueData objectForKey:@"venueName"];
+        
+        submitBox.alpha = 1.0;
+        submitBox.userInteractionEnabled = NO;
+    }
+    else {
+        submitBox.alpha = 0.4;
+        submitBox.userInteractionEnabled = YES;
     }
 }
 
@@ -220,6 +261,39 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
     
+    NSString *message = nil;
+    if ( [_messageTextField.text isEqualToString:@""] || [_messageTextField.text isEqualToString:@"Write your message..."] ) {
+        message = [NSString stringWithFormat:@"I'm hanging out @ %@", [_venueData objectForKey:@"venueName"]];
+    }
+    else {
+        message = [NSString stringWithFormat:@"%@ @ %@", _messageTextField.text, [_venueData objectForKey:@"venueName"]];
+    }
+
+    if ( _fbButton.selected ) {
+        self.postParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"Urabn Outfitters Loyalty", @"name",
+                           message, @"message",
+                           nil];
+        
+        if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
+            [FBSession.activeSession reauthorizeWithPublishPermissions: [NSArray arrayWithObject:@"publish_actions"]
+                                                       defaultAudience:FBSessionDefaultAudienceFriends
+                                                     completionHandler:^(FBSession *session, NSError *error) {
+                                                         if (!error) {
+                                                             // If permissions granted, publish the story
+                                                             [self publishToFacebook];
+                                                         }
+                                                     }];
+        }
+        else {
+            // If permissions present, publish the story
+            [self publishToFacebook];
+        }
+    }
+    
+    if ( _twButton.selected ) {
+        [self publishToTwitterWithMessage:(NSString *)message];
+    }
+    
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:req
                                                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
                                                                                             [self submitSuccessWithData:JSON];
@@ -230,9 +304,46 @@
     [operation start];
 }
 
+- (void)publishToFacebook {
+    [FBRequestConnection startWithGraphPath:@"me/feed"
+                                 parameters:self.postParams
+                                 HTTPMethod:@"POST"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                          }];
+}
+
+- (void)publishToTwitterWithMessage:(NSString *)message {
+    ACAccountStore *account = [[ACAccountStore alloc] init];
+    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
+    [account requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+        if (granted == YES) {
+            NSArray *arrayOfAccounts = [account accountsWithAccountType:accountType];
+            
+            if ([arrayOfAccounts count] > 0) {
+                ACAccount *acct = [arrayOfAccounts objectAtIndex:0];
+                
+                
+                NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1/statuses/update.json"];
+                
+                NSDictionary *params = @{@"status":message};
+                
+                SLRequest *slRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                                          requestMethod:SLRequestMethodPOST
+                                                                    URL:url
+                                                             parameters:params];
+                
+                [slRequest setAccount:acct];
+                [slRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                }];
+            }
+        }
+    }];
+}
+
 - (void)submitSuccessWithData:(NSDictionary *)JSON {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    if ( [[[JSON objectForKey:@"Nitro"] objectForKey:@"res"] isEqualToString:@"ok"] ) {
+    //if ( [[[JSON objectForKey:@"Nitro"] objectForKey:@"res"] isEqualToString:@"ok"] ) {
         UIImageView *iconImg = (UIImageView *)[self.view viewWithTag:10];
         [iconImg setImage:[self getImageWithUnsaturatedPixelsOfImage:[UIImage imageNamed:@"store_locator@2x"]]];
         
@@ -243,10 +354,14 @@
         _messageTextField.text = @"Write your message...";
         _fbButton.selected = NO;
         _twButton.selected = NO;
-    }
-    else {
-        [self showErrorAlert:[[[JSON objectForKey:@"Nitro"] objectForKey:@"Error"] objectForKey:@"Message"]];
-    }
+
+        UIView *submitBox = [self.view viewWithTag:1000];
+        submitBox.alpha = 0.4;
+        submitBox.userInteractionEnabled = YES;
+    //}
+    //else {
+        //[self showErrorAlert:[[[JSON objectForKey:@"Nitro"] objectForKey:@"Error"] objectForKey:@"Message"]];
+    //}
 }
 
 - (void)submitError {

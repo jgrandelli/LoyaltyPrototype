@@ -23,7 +23,7 @@
 @implementation VenueListViewController
 
 #define MARGIN 15.0f
-#define BASE_FOURSQUARE_URL @"https://api.foursquare.com/v2/venues/search?intent=checkin&limit=50&radius=300" //&query=office
+#define BASE_FOURSQUARE_URL @"https://api.foursquare.com/v2/venues/search?intent=browse&limit=50&radius=200" //&query=office
 #define FOURSQUARE_ID @"&client_id=4LW2FXUPV1BB002XVNFEUUKQMC23B1V5J0STJZKMFIRRSWF0"
 #define FOURSQUARE_SECRET @"&client_secret=YRCRCNOZRYYVKZRRLVCZJ2VGYUM3OWGZWD1FQNDOT2LCLVEP"
 
@@ -96,9 +96,13 @@
 }
 
 - (void)getVenues {
-    //ll=%f,%f
-    NSString *urlString = @"https://api.foursquare.com/v2/venues/search?intent=checkin&limit=50&radius=300&client_id=4LW2FXUPV1BB002XVNFEUUKQMC23B1V5J0STJZKMFIRRSWF0&client_secret=YRCRCNOZRYYVKZRRLVCZJ2VGYUM3OWGZWD1FQNDOT2LCLVEP&ll=39.890040,-75.178404";
-    //[NSString stringWithFormat:@"%@%@%@&ll=%f,%f", BASE_FOURSQUARE_URL, FOURSQUARE_ID, FOURSQUARE_SECRET, _location.coordinate.latitude, _location.coordinate.longitude];
+    
+    CGFloat lat = _location.coordinate.latitude;
+    CGFloat lon = _location.coordinate.longitude;
+    //lat = 39.890040;
+    //lon = -75.178404;
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@%@%@&ll=%f,%f", BASE_FOURSQUARE_URL, FOURSQUARE_ID, FOURSQUARE_SECRET, lat, lon];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setTimeoutInterval:30];

@@ -21,13 +21,6 @@
     return  __sharedInstance;
 }
 
-/*
-- (NSString *)sessionKey {
-    NSLog(@"getting sesssion key");
-    return @"";
-}
- */
-
 - (void)retrieveInitialSessionKey {
     NSURL *userURL = [NSURL URLWithString:@"http://sandbox.bunchball.net/nitro/json/nitro/json?apiKey=a06f6dbdb43f4c2293fa615576e4c7dc&method=user.login&userId=16"];
     NSURLRequest *userReq = [NSURLRequest requestWithURL:userURL];

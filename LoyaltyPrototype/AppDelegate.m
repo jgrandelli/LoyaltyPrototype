@@ -16,6 +16,7 @@
 #import "ShopPageViewController.h"
 #import "UserData.h"
 #import <TTSwitch.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
 
@@ -127,6 +128,46 @@
 
 - (void)revealController:(ZUUIRevealController *)revealController didEnterRearViewControllerPresentationMode:(UIViewController *)rearViewController {
 	NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
+#pragma mark Facebook Methods
+NSString *const FBSessionStateChangedNotification = @"urbn.LoyaltyPrototype:FBSessionStateChangedNotification";
+
+- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
+    NSArray *permissions = @[];
+    return [FBSession openActiveSessionWithReadPermissions:permissions
+                                              allowLoginUI:allowLoginUI
+                                         completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                             [self sessionStateChanged:session state:state error:error];
+                                         }];
+}
+
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error {
+    switch (state) {
+        case FBSessionStateOpen:
+            if (!error) {
+                // We have a valid session
+                NSLog(@"User session found");
+            }
+            break;
+        case FBSessionStateClosed:
+        case FBSessionStateClosedLoginFailed:
+            [FBSession.activeSession closeAndClearTokenInformation];
+            break;
+        default:
+            break;
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionStateChangedNotification object:session];
+    
+    if (error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:error.localizedDescription
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 @end

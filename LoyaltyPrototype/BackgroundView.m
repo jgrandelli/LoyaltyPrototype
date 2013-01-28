@@ -13,6 +13,7 @@
 @interface BackgroundView()
 
 @property (nonatomic, strong) UIColor *color;
+@property (nonatomic, strong) UIColor *borderColor;
 
 @end
 
@@ -23,17 +24,19 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
-        self.color = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.color = [UIColor whiteColor];
+        self.borderColor = [UIColor blackColor];
     }
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame color:(UIColor *)color {
+- (id)initWithFrame:(CGRect)frame color:(UIColor *)color borderColor:(UIColor *)borderColor {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.color = color;
+        self.borderColor = borderColor;
     }
     return self;
 }
@@ -48,7 +51,7 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetFillColorWithColor(context, [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0].CGColor);
+    CGContextSetFillColorWithColor(context, _borderColor.CGColor);
     CGContextFillRect(context, bottomRect);
 
     CGContextSetFillColorWithColor(context, _color.CGColor);
@@ -56,7 +59,7 @@
     
     CGRect strokeRect = CGRectInset(topRect, 1.0, 1.0);
     
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0].CGColor);
+    CGContextSetStrokeColorWithColor(context, _borderColor.CGColor);
     CGContextSetLineWidth(context, 3.5);
     CGContextStrokeRect(context, strokeRect);
 }

@@ -10,6 +10,6 @@
 
 @interface BackgroundView : UIView
 
-- (id)initWithFrame:(CGRect)frame color:(UIColor *)color;
+- (id)initWithFrame:(CGRect)frame color:(UIColor *)color borderColor:(UIColor *)borderColor;
 
 @end

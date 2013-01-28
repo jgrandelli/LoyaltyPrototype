@@ -101,6 +101,7 @@
 		45BD979B166FE34C00C0695B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BD979A166FE34C00C0695B /* Default-568h@2x.png */; };
 		45BD979E166FE34C00C0695B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45BD979D166FE34C00C0695B /* ViewController.m */; };
 		45C6455D16A9C1BF00F15A95 /* dropDownBGResizable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45C6455C16A9C1BF00F15A95 /* dropDownBGResizable@2x.png */; };
+		45C9867416B71066002ABA32 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C9867216B71042002ABA32 /* Twitter.framework */; };
 		45CD020216A74456002D69E1 /* apartment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD01FE16A74456002D69E1 /* apartment@2x.png */; };
 		45CD020316A74456002D69E1 /* mens@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD01FF16A74456002D69E1 /* mens@2x.png */; };
 		45CD020416A74456002D69E1 /* sale@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CD020016A74456002D69E1 /* sale@2x.png */; };
@@ -250,6 +251,7 @@
 		45BD979C166FE34C00C0695B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		45BD979D166FE34C00C0695B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		45C6455C16A9C1BF00F15A95 /* dropDownBGResizable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropDownBGResizable@2x.png"; sourceTree = "<group>"; };
+		45C9867216B71042002ABA32 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		45CD01FE16A74456002D69E1 /* apartment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment@2x.png"; sourceTree = "<group>"; };
 		45CD01FF16A74456002D69E1 /* mens@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mens@2x.png"; sourceTree = "<group>"; };
 		45CD020016A74456002D69E1 /* sale@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sale@2x.png"; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			files = (
 				45CFFB1216ADE25D00D3170D /* Accounts.framework in Frameworks */,
 				45CFFB0F16ADD82900D3170D /* Social.framework in Frameworks */,
+				45C9867416B71066002ABA32 /* Twitter.framework in Frameworks */,
 				45BD9785166FE34C00C0695B /* UIKit.framework in Frameworks */,
 				45BD9787166FE34C00C0695B /* Foundation.framework in Frameworks */,
 				45BD9789166FE34C00C0695B /* CoreGraphics.framework in Frameworks */,
@@ -445,6 +448,7 @@
 		45BD9783166FE34C00C0695B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45C9867216B71042002ABA32 /* Twitter.framework */,
 				45CFFB1016ADE24C00D3170D /* Accounts.framework */,
 				45CFFB0D16ADD78200D3170D /* Social.framework */,
 				45BD9784166FE34C00C0695B /* UIKit.framework */,
