@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CheckInViewController : UIViewController
+@interface CheckInViewController : UIViewController <UITextFieldDelegate>
+
+@property (nonatomic, strong) NSDictionary *venueData;
 
 @end

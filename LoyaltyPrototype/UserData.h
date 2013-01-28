@@ -32,6 +32,7 @@
 @property (nonatomic, strong) NSArray *feedArray;
 @property (nonatomic, strong) NSString *userDataPath;
 
+
 + (id)sharedInstance;
 - (void)parseUserData:(NSDictionary *)data;
 - (void)retrieveInitialSessionKey;

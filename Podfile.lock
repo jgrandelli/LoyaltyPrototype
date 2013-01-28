@@ -2,12 +2,12 @@
 COCOAPODS: 0.16.0
 
 SPEC CHECKSUMS: 
+  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
   TTSwitch: c680eac7af32f944d569c868cf4001af27ed6f0f
+  ZUUIRevealController: ab8e1f25e000357ec7fd1be64ba7c3c4fbc1257c
+  MBProgressHUD: b23ee11c42253d6d804e8e0bfabdc334e8b2571f
   Facebook-iOS-SDK: 5fc068ebfd8c8c9b0fad476bc36dbbf1fffeebc8
   CrittercismSDK: eabc672ff1a310f19c4635b65a18e044e635a42a
-  ZUUIRevealController: ab8e1f25e000357ec7fd1be64ba7c3c4fbc1257c
-  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
-  MBProgressHUD: b23ee11c42253d6d804e8e0bfabdc334e8b2571f
 
 DEPENDENCIES: 
 - AFNetworking
