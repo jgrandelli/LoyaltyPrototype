@@ -34,7 +34,7 @@
     
     NSArray *shoppingArray = [NSArray arrayWithObjects:@"Womens", @"Mens", @"Apartment", @"Gift", @"Sale", nil];
     NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", @"Check-In", nil];
-    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"MYUO Profile", @"MYUO ID", @"UOChallengesU", @"UOLeaders", nil];
+    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"UOChallengesU", @"MYUO Profile", @"MYUO ID", @"UOLeaders", nil];
     
     tableArray = [NSArray arrayWithObjects:shoppingArray, appsArray, loyaltyArray, nil];
     
@@ -200,10 +200,12 @@
 }
 
 - (void)swapFrontView {
+    /*
     ProfileViewController *profileVC = [[ProfileViewController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
     ViewController *revealController = (ViewController *)self.parentViewController;
     [revealController setFrontViewController:navigationController animated:NO];
+     */
 }
 
 - (void)loadNewFrontviewWithViewController:(UIViewController *)frontVC {

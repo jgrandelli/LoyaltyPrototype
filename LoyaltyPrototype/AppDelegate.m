@@ -17,6 +17,7 @@
 #import "UserData.h"
 #import <TTSwitch.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import "SignInViewController.h"
 
 @implementation AppDelegate
 
@@ -41,13 +42,12 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
     // Override point for customization after application launch.
-	//StatusViewController *profileVC = [[StatusViewController alloc] init];
-	ShopPageViewController *shopVC = [[ShopPageViewController alloc] init];
-    shopVC.department = @"Womens";
+
     MenuViewController *menuVC = [[MenuViewController alloc] init];
-	
-	//UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
-	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shopVC];
+
+    SignInViewController *signIn = [[SignInViewController alloc] init];
+    
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:signIn];
     ViewController *revealController = [[ViewController alloc] initWithFrontViewController:navigationController
                                                            rearViewController:menuVC];
     

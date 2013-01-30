@@ -42,7 +42,7 @@
     
     [self.navigationItem setHidesBackButton:YES];
 
-    int i = (arc4random() % 9) + 1;
+    int i = (arc4random() % 4) + 1;
     NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
@@ -238,9 +238,18 @@
 }
 
 - (void)profileBtnTouched {
+    ProfileViewController *profileVC = [[ProfileViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
+    ViewController *revealController = (ViewController *)self.navigationController.parentViewController;
+    [revealController setFrontViewController:navigationController animated:NO];
+    
+    
+    /*
     ViewController *revealController = (ViewController *)self.navigationController.parentViewController;
     MenuViewController *menu = (MenuViewController *)revealController.rearViewController;
     [menu swapFrontView];
+    */
+    
     //ProfileViewController *profileVC = [[ProfileViewController alloc] init];
    //UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
    //[revealController setFrontViewController:navigationController animated:NO];

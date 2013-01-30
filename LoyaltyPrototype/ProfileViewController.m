@@ -42,7 +42,7 @@
     
     self.challengesArray = [[NSMutableArray alloc] init];
     
-    int i = (arc4random() % 9) + 1;
+    int i = (arc4random() % 4) + 1;
     NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     

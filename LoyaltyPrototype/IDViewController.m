@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    int i = (arc4random() % 9) + 1;
+    int i = (arc4random() % 4) + 1;
     NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
@@ -52,7 +52,7 @@
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.pagingEnabled = YES;
     
-    NSArray *arr = @[@"alien", @"hamburger", @"lips", @"skull"];
+    NSArray *arr = @[@"lips", @"hamburger", @"alien", @"skull"];
     
     CGFloat yPos = (self.view.frame.size.height*.5 - (self.view.frame.size.width - 30.0)*.5);
     for ( int i = 0; i < [arr count]; ++i ) {

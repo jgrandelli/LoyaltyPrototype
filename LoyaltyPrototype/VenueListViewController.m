@@ -17,6 +17,7 @@
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) UITableView *venueTable;
+@property (nonatomic) BOOL locationFound;
 
 @end
 
@@ -32,7 +33,7 @@
 	// Do any additional setup after loading the view.
     [self.navigationItem setHidesBackButton:YES];
     
-    int i = (arc4random() % 9) + 1;
+    int i = (arc4random() % 4) + 1;
     NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
     
@@ -94,7 +95,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     self.location = _locationManager.location;
     //[self stopUpdatingLocation:@"found"];
-    [self getVenues];
+    if ( !_locationFound ) [self getVenues];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -113,6 +114,7 @@
 }
 
 - (void)getVenues {
+    self.locationFound = YES;
     
     CGFloat lat = _location.coordinate.latitude;
     CGFloat lon = _location.coordinate.longitude;

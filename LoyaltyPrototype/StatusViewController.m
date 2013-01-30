@@ -37,9 +37,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    int i = (arc4random() % 9) + 1;
-    NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"StatusBackground"]];
 
     self.navBarItems = [[NavBarItemsViewController alloc] init];
     _navBarItems.pageName = @"MYUO Status";
@@ -305,7 +303,7 @@
     stalkingLabel.backgroundColor = [UIColor clearColor];
     stalkingLabel.textColor = [UIColor blackColor];
     stalkingLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:14.0];
-    stalkingLabel.text = @"You are stalking 10 friends...";
+    stalkingLabel.text = @"Activity feed";
     [stalkingLabel sizeToFit];
     [self.view addSubview:stalkingLabel];
 

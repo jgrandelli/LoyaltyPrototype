@@ -38,8 +38,9 @@
 }
 
 - (void)parseUserData:(NSDictionary *)data {
-    
+    NSLog(@"user data = %@", data);
     NSMutableArray *activityFeed = [[NSMutableArray alloc] init];
+    
     for ( NSDictionary *dict in [data objectForKey:@"Nitro"] ) {
         if ( [dict objectForKey:@"Login"] ) self.sessionKey = [[dict objectForKey:@"Login"] objectForKey:@"sessionKey"];
         else if ( [dict objectForKey:@"userPreferences"] ) {

@@ -74,9 +74,7 @@
     
     [self.navigationItem setHidesBackButton:YES];
 
-    int i = (arc4random() % 9) + 1;
-    NSString *patternName = [NSString stringWithFormat:@"Background%i", i];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"CollegeBackground"]];
     
     CGFloat totalWidth = self.view.frame.size.width - MARGIN*2;
     
