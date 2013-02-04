@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) UITableView *venueTable;
 @property (nonatomic) BOOL locationFound;
+@property (nonatomic) int locCount;
 
 @end
 
@@ -71,6 +72,8 @@
     rightBtn.tag = 2;
     [self.navigationController.navigationBar addSubview:rightBtn];
 
+    self.locCount = 0;
+    
     self.locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -95,7 +98,8 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     self.location = _locationManager.location;
     //[self stopUpdatingLocation:@"found"];
-    if ( !_locationFound ) [self getVenues];
+    self.locCount++;
+    if ( !_locationFound && _locCount == 5 ) [self getVenues];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {

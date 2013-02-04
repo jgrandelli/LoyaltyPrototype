@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSArray *rulesArray;
 @property (nonatomic) BOOL hasLeaderboard;
 @property (nonatomic) BOOL locked;
+@property (nonatomic, strong) NSString *badge;
 
 - (id)initWithDictionary:(NSDictionary *)data;
 

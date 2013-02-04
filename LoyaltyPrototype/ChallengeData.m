@@ -38,6 +38,7 @@
     NSString *customDataString = [data objectForKey:@"customData"];
     NSArray *customDataArray = [customDataString componentsSeparatedByString:@","];
     NSMutableDictionary *customDataDictionary = [[NSMutableDictionary alloc] init];
+    
     for ( int i = 0; i < [customDataArray count]; ++i ) {
         NSString *pair = [customDataArray objectAtIndex:i];
         NSUInteger colonInt = [pair rangeOfString:@":"].location;
@@ -50,6 +51,10 @@
     }
     
     self.icon = [customDataDictionary objectForKey:@"type"];
+    //NSLog(@"custom data = %@", customDataDictionary);
+    if ( [customDataDictionary objectForKey:@"badge"] ) self.badge = [customDataDictionary objectForKey:@"badge"];
+    //NSLog(@"%@ badge = %@", self.title, self.badge);
+    
     
     if ( [[customDataDictionary objectForKey:@"leaderboard"] isEqual:@"YES"] ) self.hasLeaderboard = YES;
 }

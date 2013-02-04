@@ -32,7 +32,7 @@
     
     [self.navigationItem setHidesBackButton:YES];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"SplashBackground"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"authBK"]];
 
     if ( self.hasAccount ) [self showSignIn];
     else [self showSignUp];

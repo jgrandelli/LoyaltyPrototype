@@ -24,20 +24,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"SplashBackground"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"splashBK"]];
     
     NavBarItemsViewController *navBarItems = [[NavBarItemsViewController alloc] init];
     navBarItems.pageName = @"Urban Outfitters";
     [navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [self.navigationController.navigationBar addSubview:navBarItems.view];
-
+    
+    
+    /*
     BackgroundView *promoBack = [[BackgroundView alloc] initWithFrame:CGRectMake(15.0, self.navigationController.navigationBar.frame.size.height + 15.0, self.view.frame.size.width - 30.0, 200.0)];
     [self.view addSubview:promoBack];
     NSLog(@"promo area = %@", NSStringFromCGSize(promoBack.frame.size));
-    
+    */
     
     UIButton *signInBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    signInBtn.frame = CGRectMake(15.0, promoBack.frame.origin.y + promoBack.frame.size.height + 30.0, promoBack.frame.size.width, 44.0);
+    signInBtn.frame = CGRectMake(24.0, 310.0, self.view.frame.size.width - 48.0, 44.0);
     [signInBtn addTarget:self action:@selector(signIn) forControlEvents:UIControlEventTouchUpInside];
     
     BackgroundView *buttonBack = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 0.0, signInBtn.frame.size.width, signInBtn.frame.size.height)];
@@ -60,7 +62,7 @@
 
 
     UIButton *signUpBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    signUpBtn.frame = CGRectMake(15.0, signInBtn.frame.origin.y + signInBtn.frame.size.height + 10.0, signInBtn.frame.size.width, 44.0);
+    signUpBtn.frame = CGRectMake(24.0, signInBtn.frame.origin.y + signInBtn.frame.size.height + 10.0, signInBtn.frame.size.width, 44.0);
     [signUpBtn addTarget:self action:@selector(signUp) forControlEvents:UIControlEventTouchUpInside];
 
     buttonBack = [[BackgroundView alloc] initWithFrame:CGRectMake(0.0, 0.0, signUpBtn.frame.size.width, signUpBtn.frame.size.height)];

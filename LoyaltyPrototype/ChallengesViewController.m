@@ -62,7 +62,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:patternName]];
 
     self.navBarItems = [[NavBarItemsViewController alloc] init];
-    _navBarItems.pageName = @"UOChallengesU";
+    _navBarItems.pageName = @"To Do List";
     [_navBarItems.view setFrame:self.navigationController.navigationBar.bounds];
     [_navBarItems updateInfo];
     [self.navigationController.navigationBar addSubview:_navBarItems.view];

@@ -375,7 +375,7 @@
     [alertView show];
 }
 
--(UIImage *)getImageWithUnsaturatedPixelsOfImage:(UIImage *)image {
+- (UIImage *)getImageWithUnsaturatedPixelsOfImage:(UIImage *)image {
     const int RED = 1, GREEN = 2, BLUE = 3;
     
     CGRect imageRect = CGRectMake(0, 0, image.size.width*2, image.size.height*2);

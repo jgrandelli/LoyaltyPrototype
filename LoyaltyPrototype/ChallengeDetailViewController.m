@@ -242,17 +242,6 @@
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
     ViewController *revealController = (ViewController *)self.navigationController.parentViewController;
     [revealController setFrontViewController:navigationController animated:NO];
-    
-    
-    /*
-    ViewController *revealController = (ViewController *)self.navigationController.parentViewController;
-    MenuViewController *menu = (MenuViewController *)revealController.rearViewController;
-    [menu swapFrontView];
-    */
-    
-    //ProfileViewController *profileVC = [[ProfileViewController alloc] init];
-   //UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileVC];
-   //[revealController setFrontViewController:navigationController animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

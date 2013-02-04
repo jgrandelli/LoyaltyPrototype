@@ -20,15 +20,16 @@
 @property (nonatomic, strong) NSString *imgPath;
 @property (nonatomic) int points;
 @property (nonatomic, strong) NSString *formattedPoints;
-@property (nonatomic, strong) NSString *currentLevel;
-@property (nonatomic) int currentLevelGoal;
-@property (nonatomic, strong) NSString *formattedCurrentLevelGoal;
-@property (nonatomic, strong) NSString *nextLevel;
-@property (nonatomic) int nextLevelGoal;
-@property (nonatomic, strong) NSString *formattedNextLevelGoal;
-@property (nonatomic) int pointsToGo;
-@property (nonatomic, strong) NSString *formattedPointsToGo;
-@property (nonatomic) CGFloat percentAchieved;
+@property (nonatomic, strong) NSString *pointsName;
+//@property (nonatomic, strong) NSString *currentLevel;
+//@property (nonatomic) int currentLevelGoal;
+//@property (nonatomic, strong) NSString *formattedCurrentLevelGoal;
+//@property (nonatomic, strong) NSString *nextLevel;
+//@property (nonatomic) int nextLevelGoal;
+//@property (nonatomic, strong) NSString *formattedNextLevelGoal;
+//@property (nonatomic) int pointsToGo;
+//@property (nonatomic, strong) NSString *formattedPointsToGo;
+//@property (nonatomic) CGFloat percentAchieved;
 @property (nonatomic, strong) NSArray *feedArray;
 @property (nonatomic, strong) NSString *userDataPath;
 

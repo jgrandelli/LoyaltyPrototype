@@ -34,7 +34,7 @@
     
     NSArray *shoppingArray = [NSArray arrayWithObjects:@"Womens", @"Mens", @"Apartment", @"Gift", @"Sale", nil];
     NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", @"Check-In", nil];
-    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"UOChallengesU", @"MYUO Profile", @"MYUO ID", @"UOLeaders", nil];
+    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"To Do List", @"MYUO Profile", @"MYUO ID", @"UOLeaders", nil];
     
     tableArray = [NSArray arrayWithObjects:shoppingArray, appsArray, loyaltyArray, nil];
     
@@ -180,7 +180,7 @@
         }
         else [revealController revealToggle:self];
     }
-    else if ( [selection isEqualToString:@"UOChallengesU"] ) {
+    else if ( [selection isEqualToString:@"To Do List"] ) {
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[ChallengesViewController class]] ) {
             ChallengesViewController *challengesVC = [[ChallengesViewController alloc] init];
             [self loadNewFrontviewWithViewController:challengesVC];

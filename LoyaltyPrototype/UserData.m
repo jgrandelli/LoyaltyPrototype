@@ -38,7 +38,6 @@
 }
 
 - (void)parseUserData:(NSDictionary *)data {
-    NSLog(@"user data = %@", data);
     NSMutableArray *activityFeed = [[NSMutableArray alloc] init];
     
     for ( NSDictionary *dict in [data objectForKey:@"Nitro"] ) {
@@ -54,9 +53,57 @@
         }
         else if ( [dict objectForKey:@"Balance"] ) {
             self.userID = [[dict objectForKey:@"Balance"] objectForKey:@"userId"];
-            self.points = [[[dict objectForKey:@"Balance"] objectForKey:@"lifetimeBalance"] intValue];
-            self.formattedPoints = [self formattedPointsFromInt:_points];
+            //self.points = [[[dict objectForKey:@"Balance"] objectForKey:@"lifetimeBalance"] intValue];
+            //self.formattedPoints = [self formattedPointsFromInt:_points];
+            NSArray *pointsArray = [[[dict objectForKey:@"Balance"] objectForKey:@"pointCategories"] objectForKey:@"PointCategory"];
+            for ( NSDictionary *categoryDict in pointsArray ) {
+                if ( ![[categoryDict objectForKey:@"name"] isEqualToString:@"Points"] ) {
+                    self.points = [[categoryDict objectForKey:@"points"] intValue];
+                    self.formattedPoints = [self formattedPointsFromInt:_points];
+                    self.pointsName = [categoryDict objectForKey:@"name"];
+                }
+            }
         }
+        else if ( [[dict objectForKey:@"method"] isEqualToString:@"site.getActionFeed"] ) {
+            for ( NSDictionary *feedItem in [[dict objectForKey:@"items"] objectForKey:@"entry"] ) {
+                
+                NSString *content = [feedItem objectForKey:@"content"];
+                NSString *iconPath = nil;
+                NSRange pipeRange = [content rangeOfString:@"|"];
+                if ( pipeRange.location != NSNotFound ) {
+                    iconPath = [content substringFromIndex:pipeRange.location + 1];
+                    content = [content substringToIndex:pipeRange.location];
+                }
+                
+                NSLog(@"content = %@", content);
+                NSLog(@"icon path = %@", iconPath);
+                
+                int ts = [[feedItem objectForKey:@"ts"] intValue];
+                NSDate* date = [NSDate dateWithTimeIntervalSince1970:ts];
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+                NSString *dateString = [dateFormatter stringFromDate:date];
+                
+                NSString *handle = @"";
+                if ( [[feedItem objectForKey:@"UserPreferences"] respondsToSelector:@selector(objectForKey:)] ) {
+                    for ( NSDictionary *userDict in [[feedItem objectForKey:@"UserPreferences"] objectForKey:@"UserPreference"] ) {
+                        if ( [[userDict objectForKey:@"name"] isEqualToString:@"profile_name"] ) {
+                            handle = [[userDict objectForKey:@"value"] uppercaseString];
+                        }
+                    }
+                    
+                    NSDictionary *dict = [[NSMutableDictionary alloc] init];
+                    [dict setValue:content forKey:@"content"];
+                    [dict setValue:iconPath forKey:@"iconPath"];
+                    [dict setValue:dateString forKey:@"timestamp"];
+                    [dict setValue:handle forKey:@"handle"];
+                    
+                    [activityFeed addObject:dict];
+                    
+                }
+            }
+        }
+        /*
         else if ( [[dict objectForKey:@"method"] isEqualToString:@"user.getLevel"] ) {
             NSDictionary *levelDict = [[[dict objectForKey:@"users"] objectForKey:@"User"] objectForKey:@"SiteLevel"];
             self.currentLevel = [levelDict objectForKey:@"description"];
@@ -80,32 +127,7 @@
             self.formattedNextLevelGoal = [self formattedPointsFromInt:_nextLevelGoal];
             self.formattedPointsToGo = [self formattedPointsFromInt:_pointsToGo];
         }
-        else if ( [[dict objectForKey:@"method"] isEqualToString:@"site.getActionFeed"] ) {
-            for ( NSDictionary *feedItem in [[dict objectForKey:@"items"] objectForKey:@"entry"] ) {
-                
-                NSString *content = [feedItem objectForKey:@"content"];
-                
-                int ts = [[feedItem objectForKey:@"ts"] intValue];
-                NSDate* date = [NSDate dateWithTimeIntervalSince1970:ts];
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
-                NSString *dateString = [dateFormatter stringFromDate:date];
-
-                NSString *handle = @"";
-                for ( NSDictionary *userDict in [[feedItem objectForKey:@"UserPreferences"] objectForKey:@"UserPreference"] ) {
-                    if ( [[userDict objectForKey:@"name"] isEqualToString:@"profile_name"] ) {
-                        handle = [[userDict objectForKey:@"value"] uppercaseString];
-                    }
-                }
-                
-                NSDictionary *dict = [[NSMutableDictionary alloc] init];
-                [dict setValue:content forKey:@"content"];
-                [dict setValue:dateString forKey:@"timestamp"];
-                [dict setValue:handle forKey:@"handle"];
-                
-                [activityFeed addObject:dict];
-            }
-        }
+         */
     }
     
     self.feedArray = [NSArray arrayWithArray:activityFeed];
