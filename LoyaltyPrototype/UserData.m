@@ -75,9 +75,6 @@
                     content = [content substringToIndex:pipeRange.location];
                 }
                 
-                NSLog(@"content = %@", content);
-                NSLog(@"icon path = %@", iconPath);
-                
                 int ts = [[feedItem objectForKey:@"ts"] intValue];
                 NSDate* date = [NSDate dateWithTimeIntervalSince1970:ts];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

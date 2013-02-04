@@ -216,7 +216,13 @@
     UIView *feedHolder = [[UIView alloc] initWithFrame:CGRectZero];
     CGFloat yPos = 10.0;
     for ( NSDictionary *feedItem in userData.feedArray ) {
-        NSString *content = [NSString stringWithFormat:@"%@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
+        NSString *imgPath = [NSString stringWithFormat:@"badge_%@", [feedItem objectForKey:@"iconPath"]];
+        UIImageView *iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
+        iconImg.frame = CGRectMake( 10.0, yPos, 15.0, 15.0);
+        [feedHolder addSubview:iconImg];
+        
+        
+        NSString *content = [NSString stringWithFormat:@"      %@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
         NSMutableAttributedString *attString=[[NSMutableAttributedString alloc] initWithString:content];
         
         NSRange handleRange = [content rangeOfString:[feedItem objectForKey:@"handle"]];
@@ -225,7 +231,7 @@
         [attString addAttribute:NSFontAttributeName value:boldFont range:handleRange];
         [attString addAttribute:NSForegroundColorAttributeName value:boldColor range:handleRange];
         
-        UILabel *feedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPos, oldHolder.frame.size.width - 20.0, 0.0)];
+        UILabel *feedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPos + 1.0, oldHolder.frame.size.width - 20.0, 0.0)];
         feedLabel.backgroundColor = [UIColor clearColor];
         feedLabel.textColor = [UIColor blackColor];
         feedLabel.numberOfLines = 0;
@@ -429,7 +435,7 @@
         [feedHolder addSubview:iconImg];
         
         
-        NSString *content = [NSString stringWithFormat:@"     %@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
+        NSString *content = [NSString stringWithFormat:@"      %@: %@", [feedItem objectForKey:@"handle"], [feedItem objectForKey:@"content"]];
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:content];
         
         NSRange handleRange = [content rangeOfString:[feedItem objectForKey:@"handle"]];
