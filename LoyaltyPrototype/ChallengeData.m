@@ -31,7 +31,7 @@
     
     CGFloat rulesCompletion = [self calcutateCompletionWithDictionary:[data objectForKey:@"rules"]];
     CGFloat challengeCompletion = [[data objectForKey:@"completionCount"] floatValue];
-    
+    if ( challengeCompletion >= 1.0 ) challengeCompletion = 1.0;
     self.completion = challengeCompletion;
     if ( challengeCompletion == 0.0 ) self.completion = rulesCompletion;
     
@@ -51,10 +51,9 @@
     }
     
     self.icon = [customDataDictionary objectForKey:@"type"];
-    //NSLog(@"custom data = %@", customDataDictionary);
+    self.reward = [customDataDictionary objectForKey:@"reward"];
+
     if ( [customDataDictionary objectForKey:@"badge"] ) self.badge = [customDataDictionary objectForKey:@"badge"];
-    //NSLog(@"%@ badge = %@", self.title, self.badge);
-    
     
     if ( [[customDataDictionary objectForKey:@"leaderboard"] isEqual:@"YES"] ) self.hasLeaderboard = YES;
 }

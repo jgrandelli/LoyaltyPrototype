@@ -23,6 +23,7 @@
 @property (nonatomic) BOOL hasLeaderboard;
 @property (nonatomic) BOOL locked;
 @property (nonatomic, strong) NSString *badge;
+@property (nonatomic, strong) NSString *reward;
 
 - (id)initWithDictionary:(NSDictionary *)data;
 

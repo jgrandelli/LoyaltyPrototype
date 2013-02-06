@@ -99,7 +99,7 @@
     self.location = _locationManager.location;
     //[self stopUpdatingLocation:@"found"];
     self.locCount++;
-    if ( !_locationFound && _locCount == 5 ) [self getVenues];
+    if ( !_locationFound && _locCount == 3 ) [self getVenues];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {

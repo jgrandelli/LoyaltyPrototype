@@ -67,8 +67,10 @@
                                                                      0.0)];
     pointsLabel.backgroundColor = [UIColor clearColor];
     pointsLabel.textColor = [UIColor blueColor];
+    pointsLabel.numberOfLines = 0;
+    pointsLabel.lineBreakMode = NSLineBreakByWordWrapping;
     pointsLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:15.0];
-    pointsLabel.text = [NSString stringWithFormat:@"%@ points", _challengeData.pointsString];
+    pointsLabel.text = [NSString stringWithFormat:@"%@.", _challengeData.reward];
     [pointsLabel sizeToFit];
     [self.view addSubview:pointsLabel];
     

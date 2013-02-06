@@ -446,7 +446,8 @@
         
         UILabel *feedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPos + 1.0, backView.frame.size.width - 25.0, 0.0)];
         feedLabel.backgroundColor = [UIColor clearColor];
-        feedLabel.textColor = [UIColor blackColor];
+        if ( [[feedItem objectForKey:@"type"] isEqualToString:@"Action"] ) feedLabel.textColor = [UIColor darkGrayColor];
+        else feedLabel.textColor = [UIColor blackColor];
         feedLabel.numberOfLines = 0;
         feedLabel.lineBreakMode = NSLineBreakByWordWrapping;
         feedLabel.font = [UIFont fontNamedLoRes12BoldOaklandWithSize:12.0];
@@ -454,6 +455,7 @@
         
         [feedLabel sizeToFit];
         [feedHolder addSubview:feedLabel];
+        
         
         yPos += 8.0 + feedLabel.frame.size.height;
     }

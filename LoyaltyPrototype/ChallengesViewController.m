@@ -208,9 +208,12 @@
     
     for ( NSDictionary *dict in JSON ) {
         ChallengeData *challenge = [[ChallengeData alloc] initWithDictionary:dict];
-        if ( challenge.completion == 0.0 ) [self.availableChallenges addObject:challenge];
-        else if ( challenge.completion == 1.0 ) [self.completedChallenges addObject:challenge];
-        else [self.currentChallenges addObject:challenge];
+        
+        if ( [challenge.title rangeOfString:@"facebook"].location == NSNotFound ) {
+            if ( challenge.completion == 0.0 ) [self.availableChallenges addObject:challenge];
+            else if ( challenge.completion == 1.0 ) [self.completedChallenges addObject:challenge];
+            else [self.currentChallenges addObject:challenge];
+        }
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -228,7 +231,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     ChallengeData *challenge = [_selectedArray objectAtIndex:[indexPath row]];
     
-    NSString *title = [NSString stringWithFormat:@"%@: %@ points", challenge.title, challenge.pointsString];
+    NSString *title = [NSString stringWithFormat:@"%@: %@.", challenge.title, challenge.reward];
     NSString *desc = challenge.description;
     int perc = challenge.completion * 100;
     NSString *complete = [NSString stringWithFormat:@" (%i%% completed)", perc];
@@ -296,8 +299,8 @@
     UIImage *img = [UIImage imageNamed:challenge.icon];
     [icon setImage:img];
     
-    NSString *title = [NSString stringWithFormat:@"%@: %@ points", challenge.title, challenge.pointsString];
-    NSString *pointsText = [NSString stringWithFormat:@"%@ points", challenge.pointsString];
+    NSString *title = [NSString stringWithFormat:@"%@: %@.", challenge.title, challenge.reward];
+    NSString *pointsText = [NSString stringWithFormat:@"%@.", challenge.reward];
     int perc = challenge.completion * 100;
     NSString *percentText = [NSString stringWithFormat:@" (%i%% completed)", perc];
     

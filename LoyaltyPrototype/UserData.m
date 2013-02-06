@@ -74,12 +74,15 @@
                     iconPath = [content substringFromIndex:pipeRange.location + 1];
                     content = [content substringToIndex:pipeRange.location];
                 }
+                else iconPath = @"default";
                 
                 int ts = [[feedItem objectForKey:@"ts"] intValue];
                 NSDate* date = [NSDate dateWithTimeIntervalSince1970:ts];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
                 NSString *dateString = [dateFormatter stringFromDate:date];
+                
+                NSString *activityType = [feedItem objectForKey:@"type"];
                 
                 NSString *handle = @"";
                 if ( [[feedItem objectForKey:@"UserPreferences"] respondsToSelector:@selector(objectForKey:)] ) {
@@ -92,6 +95,7 @@
                     NSDictionary *dict = [[NSMutableDictionary alloc] init];
                     [dict setValue:content forKey:@"content"];
                     [dict setValue:iconPath forKey:@"iconPath"];
+                    [dict setValue:activityType forKey:@"type"];
                     [dict setValue:dateString forKey:@"timestamp"];
                     [dict setValue:handle forKey:@"handle"];
                     
