@@ -74,6 +74,7 @@
             if ( percentComplete > 1.0 ) percentComplete = 1.0;
             
             NSString *description = [rule objectForKey:@"description"];
+            if ( !description ) description = @"";
             
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
             [dict setObject:[NSNumber numberWithInt:sortOrder] forKey:@"sortOrder"];

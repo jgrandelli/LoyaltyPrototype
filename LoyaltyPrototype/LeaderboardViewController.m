@@ -17,6 +17,8 @@
 #import "BackgroundView.h"
 #import "UIFont+UrbanAdditions.h"
 
+#import <Parse/Parse.h>
+
 @interface LeaderboardViewController ()
 
 @property (nonatomic, strong) NSMutableArray *availableLeaderBoards;
@@ -44,7 +46,7 @@
 @implementation LeaderboardViewController
 
 #define BASE_URL @"https://sandbox.bunchball.net/nitro/json?"
-#define USER_URL @"start=1356712240&withRank=true&duration=ALLTIME&criteria=CREDITS&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile_name%7Cprofile_url%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds=16"
+#define USER_URL @"https://sandbox.bunchball.net/nitro/json?start=1356712240&withRank=true&duration=ALLTIME&criteria=CREDITS&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile_name%7Cprofile_url%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds=16"
 #define FRIENDS_URL @"method=user.getFriends&friendType=current&returnCount=100"
 #define OVERALL_LEADERS_URL @"start=1356712240&withRank=false&duration=ALLTIME&criteria=BALANCE&pointCategory=Points&withSurroundingUsers=false&tags=&groupName=&returnCount=100&preferences=profile%5Fname%7Cprofile%5Furl%7Cgender&method=site%2EgetPointsLeaders&asyncToken=&tagsOperator=OR&userIds="
 #define AVAILABLE_BOARDS_URL @"method=user.getChallengeProgress&showonlytrophies=false&showCanAchieveChallenge=true"
@@ -469,6 +471,9 @@
         [_leaderList addObject:userDict];
     }
     
+    //Putting User Data in Parse!!!!!
+    //[self addUsersToParse];
+    
     [self.tableDataArray removeAllObjects];
 
     if ( _friendsBtn.selected ) {
@@ -480,6 +485,24 @@
     }
     else self.tableDataArray = [NSMutableArray arrayWithArray:_leaderList];
     //*/
+}
+
+//Putting User Data in Parse!!!!!
+- (void)addUsersToParse {
+    for ( NSDictionary *user in _leaderList ) {
+        NSString *userID = [user objectForKey:@"userID"];
+        NSString *handle = [user objectForKey:@"handle"];
+        
+        PFObject *newParseUser = [PFObject objectWithClassName:@"Users"];
+        [newParseUser setObject:userID forKey:@"loyaltyID"];
+        [newParseUser setObject:handle forKey:@"loyaltyName"];
+        //[newParseUser save];
+        
+        [newParseUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            NSLog(@"succeeded = %d", succeeded);
+            if ( !succeeded ) NSLog(@"error = %@", error);
+        }];
+    }
 }
 
 - (void)parseChallengeLeaderBoard:(NSDictionary *)JSON {

@@ -10,6 +10,10 @@
 
 @class ViewController;
 
+@protocol MyAppDelegateDelegate <NSObject>
+
+@end
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
@@ -17,6 +21,7 @@
 
 extern NSString *const FBSessionStateChangedNotification;
 
-- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
+//- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
+- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI delegate:(id)delegate;
 
 @end

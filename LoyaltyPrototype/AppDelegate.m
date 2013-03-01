@@ -19,13 +19,19 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import "SignInViewController.h"
 
+#import <Parse/Parse.h>
+
 @implementation AppDelegate
 
 #pragma - Initialization.
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    [Parse setApplicationId:@"78QySrzaWUIejv2ab0XS2NUAQG2tJpo8xLdRj7WA"
+                  clientKey:@"QrQkHwRc8lzOGFjAGlFdnmpVJRd3fbGMu1b9ZFmj"];
     
+
     [[UserData sharedInstance] retrieveInitialSessionKey];
 
     [[TTSwitch appearance] setTrackImage:[UIImage imageNamed:@"switch-track"]];
@@ -40,8 +46,6 @@
     
     // Let the device know we want to receive push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-
-    // Override point for customization after application launch.
 
     MenuViewController *menuVC = [[MenuViewController alloc] init];
 
@@ -133,21 +137,26 @@
 #pragma mark Facebook Methods
 NSString *const FBSessionStateChangedNotification = @"urbn.LoyaltyPrototype:FBSessionStateChangedNotification";
 
-- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
+- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI delegate:(id)delegate {
     NSArray *permissions = @[];
     return [FBSession openActiveSessionWithReadPermissions:permissions
                                               allowLoginUI:allowLoginUI
                                          completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                             [self sessionStateChanged:session state:state error:error];
+                                             [self sessionStateChanged:session state:state error:error delegate:delegate];
                                          }];
 }
 
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error {
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error delegate:(id)delegate {
+    [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionStateChangedNotification object:session];
+
     switch (state) {
         case FBSessionStateOpen:
             if (!error) {
                 // We have a valid session
                 NSLog(@"User session found");
+                if ( [delegate respondsToSelector:@selector(facebookDidFinishLogin)] ) {
+                    [delegate performSelector:@selector(facebookDidFinishLogin)];
+                }
             }
             break;
         case FBSessionStateClosed:
@@ -157,8 +166,6 @@ NSString *const FBSessionStateChangedNotification = @"urbn.LoyaltyPrototype:FBSe
         default:
             break;
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionStateChangedNotification object:session];
     
     if (error) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"

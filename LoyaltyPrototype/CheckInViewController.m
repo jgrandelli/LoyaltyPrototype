@@ -178,7 +178,7 @@
 - (void)checkFacebook {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     if ( !FBSession.activeSession.isOpen ) {
-        [appDelegate openSessionWithAllowLoginUI:YES];
+        [appDelegate openSessionWithAllowLoginUI:YES delegate:self];
     }
     else {
         NSLog(@"session is already open!");

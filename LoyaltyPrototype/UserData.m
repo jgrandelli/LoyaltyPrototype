@@ -100,10 +100,10 @@
                     [dict setValue:handle forKey:@"handle"];
                     
                     [activityFeed addObject:dict];
-                    
                 }
             }
         }
+        
         /*
         else if ( [[dict objectForKey:@"method"] isEqualToString:@"user.getLevel"] ) {
             NSDictionary *levelDict = [[[dict objectForKey:@"users"] objectForKey:@"User"] objectForKey:@"SiteLevel"];

@@ -18,6 +18,7 @@
 #import "ProfileViewController.h"
 #import "IDViewController.h"
 #import "CheckInViewController.h"
+#import "FriendsViewController.h"
 
 @interface MenuViewController () {
     NSArray *tableArray;
@@ -34,7 +35,7 @@
     
     NSArray *shoppingArray = [NSArray arrayWithObjects:@"Womens", @"Mens", @"Apartment", @"Gift", @"Sale", nil];
     NSArray *appsArray = [NSArray arrayWithObjects:@"Music Player", @"Store Locator", @"Check-In", nil];
-    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"To Do List", @"MYUO Profile", @"MYUO ID", @"UOLeaders", nil];
+    NSArray *loyaltyArray = [NSArray arrayWithObjects:@"MYUO Status", @"To Do List", @"Friends", @"MYUO Profile", @"MYUO ID", @"UOLeaders", nil];
     
     tableArray = [NSArray arrayWithObjects:shoppingArray, appsArray, loyaltyArray, nil];
     
@@ -163,6 +164,13 @@
         if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[StatusViewController class]] ) {
             StatusViewController *statusVC = [[StatusViewController alloc] init];
             [self loadNewFrontviewWithViewController:statusVC];
+        }
+        else [revealController revealToggle:self];
+    }
+    else if ( [selection isEqualToString:@"Friends"] ) {
+        if ( ![((UINavigationController *)revealController.frontViewController).topViewController isKindOfClass:[FriendsViewController class]] ) {
+            FriendsViewController *friendsVC = [[FriendsViewController alloc] init];
+            [self loadNewFrontviewWithViewController:friendsVC];
         }
         else [revealController revealToggle:self];
     }
